@@ -1,3 +1,9 @@
+<style>
+  .footer {
+    color: white;
+    background-color: rgb(31, 31, 31);
+  }
+</style>
 <div class="footer">
     <div class="container">
         <div class="row">

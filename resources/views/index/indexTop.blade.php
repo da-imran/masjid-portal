@@ -1,33 +1,43 @@
 <style>
-  a.btn.btn-light {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    text-align: center;
-    padding-bottom: 10px;
-  }
-  .img-button {
-    max-height: 80px;
-    max-width: 80px;
-  }
   .image-text-container {
+    align-items: center;
     background-color: rgb(31, 31, 31);
-  }
-  .footer {
     color: white;
-    background-color: rgb(31, 31, 31);
+    display: flex;
+    font-weight: 600;
+    font-style: italic;
+    font-size: 1.5rem;
+    justify-content: center;
+    letter-spacing: 1px;
+    text-decoration: none;
+    height: 5em;
+  }
+  .image-text-container img {
+    margin-right: 10px;
+    height: 5rem;
   }
   li.nav-item {
     font-weight: bold;
     color: black;
   }
-  li.nav-link:hover { /* More specific selector chain */
+  li.nav-link:hover {
     background-color: white;
     color: red;
   }
   .dropdown:hover .dropdown-menu{
     display: block;
+    margin-top: 0;
+  }
+  .navbar .nav-item:not(:last-child) {
+    margin-right: 35px;
+  }
+  .dropdown-toggle::after {
+    transition: transform 0.15s linear; 
+  }
+  .show.dropdown .dropdown-toggle::after {
+    transform: translateY(3px);
+  }
+  .dropdown-menu {
     margin-top: 0;
   }
 </style>
@@ -118,7 +128,7 @@
             </div>
           </li>
           <li class="nav-item">
-            <a class="navbar-link" href="http://masjid-portal.test/utama">HUBUNGI KAMI</a>
+            <a class="navbar-link" href="/hubungi-kami">HUBUNGI KAMI</a>
           </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
@@ -129,3 +139,13 @@
     </nav>
   </div>
 </div>
+<script>
+  const navLinks = document.querySelectorAll('.nav-link.dropdown-toggle');
+
+  navLinks.forEach(link => {
+      link.addEventListener('mouseover', () => {
+          const dropdownMenu = link.nextElementSibling;
+          dropdownMenu.classList.toggle('show');
+      });
+  });
+</script>

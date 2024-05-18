@@ -2,8 +2,13 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
        @include('root.headerMetadata')
-       <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     </head>
+    <style>
+      .carousel-inner{
+        height: 50%;
+        max-height: 500px
+      }
+    </style>
     <body>
         @include('index.indexTop')
         <div class="banner">
@@ -14,13 +19,17 @@
                             <ol class="carousel-indicators">
                               <li data-target="#carouselImages" data-slide-to="0" class="active"></li>
                               <li data-target="#carouselImages" data-slide-to="1"></li>
+                              <li data-target="#carouselImages" data-slide-to="2"></li>
                             </ol>
                             <div class="carousel-inner">
                               <div class="carousel-item active">
-                                <img class="d-block w-100" src="{{ asset('images/slide1.png')}}" alt="First slide">
+                                <img class="d-block w-100" src="{{ asset('images/slide1.jpg')}}" alt="First slide">
                               </div>
                               <div class="carousel-item">
-                                <img class="d-block w-100" src="{{ asset('images/slide2.jpg')}}" alt="Second slide">
+                                <img class="d-block w-100" src="{{ asset('images/slide4.jpg')}}" alt="Second slide">
+                              </div>
+                              <div class="carousel-item">
+                                <img class="d-block w-100" src="{{ asset('images/slide3.jpg')}}" alt="Third slide">
                               </div>
                             </div>
                             <a class="carousel-control-prev" href="#carouselImages" role="button" data-slide="prev">
@@ -41,14 +50,4 @@
         @include('index.indexLink')
         @include('index.indexBottom')
     </body>
-    <script>
-      const navLinks = document.querySelectorAll('.nav-link.dropdown-toggle');
-
-      navLinks.forEach(link => {
-          link.addEventListener('mouseover', () => {
-              const dropdownMenu = link.nextElementSibling;
-              dropdownMenu.classList.toggle('show');
-          });
-      });
-    </script>
 </html>
