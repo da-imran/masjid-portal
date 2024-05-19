@@ -23,8 +23,11 @@
           </div>
           <div class="col-6 col-md-4 mt-3 mb-3">
             <div><h1 style="font-size: 25px"><b>Alamat</b></h1></div>
-            <div>Jalan Sultan Azlan Shah, Kampung Sungai Tiram, 11900 Bayan Lepas, Pulau Pinang</div> 
-            <div>Telefon: 0193200799</div> 
+            <p>Masjid Al Mustaghfirin, Bayan Lepas</p> 
+            <p>Jalan Sultan Azlan Shah, Kampung Sungai Tiram,</p>
+            <p>11900 Bayan Lepas,</p>
+            <p>Pulau Pinang</p> 
+            <p class="font-italic">Telefon: +019-320-0799</div> 
           </div>
         </div>
     </div>

@@ -111,7 +111,7 @@
               INFORMASI
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="/informasi/berita-semasa">Berita Semasa</a>
+              <a class="dropdown-item" href="{{ url('/informasi/berita-semasa')}}">Berita Semasa</a>
               <a class="dropdown-item" href="/informasi/kemudahan">Kemudahan</a>
               <a class="dropdown-item" href="/informasi/takwim">Takwim</a>
               <a class="dropdown-item" href="/informasi/kutipan-tabung-masjid">Kutipan Tabung Masjid</a>

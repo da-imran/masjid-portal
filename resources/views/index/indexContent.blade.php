@@ -77,6 +77,7 @@
               </div>
             </div>
             <div class="col-md-6 announcements">
+              <h6 class="text" style="font-size: 20px"><b>Pengumuman</b></h6>
               <div id="carouselPengumuman" class="carousel slide" data-ride="carousel" style="margin: 25px 0px 25px 0px; max-width: 100%; height:auto;">
                 <ol class="carousel-indicators">
                   <li data-target="#carouselPengumuman" data-slide-to="0" class="active"></li>
@@ -88,7 +89,7 @@
                   <div class="carousel-item active">
                     <div class="row mb-3">  
                       <div class="col-md-3"> 
-                        <img class="d-block w-100" src="{{ asset('images/berita/berita_1.jpg')}}" alt="First slide">
+                        <img class="d-block w-100" src="{{ asset('images/pengumuman/pengumuman_1.jpg')}}" alt="First slide">
                       </div>
                       <div class="media-body">
                         <h5 class="fs-5">Majlis Selawat Al-Mustaghfirin</h5>
@@ -99,7 +100,7 @@
                     </div>
                     <div class="row">
                       <div class="col-md-3">
-                        <img class="d-block w-100" src="{{ asset('images/berita/berita_2.jpg')}}" alt="Second slide">
+                        <img class="d-block w-100" src="{{ asset('images/pengumuman/pengumuman_2.jpg')}}" alt="Second slide">
                       </div>
                       <div class="media-body">
                         <h5 class="fs-5">Hari Riadah Keluarga Al-Mustaghfirin</h5>
@@ -112,7 +113,7 @@
                   <div class="carousel-item">
                     <div class="row mb-3">  
                       <div class="col-md-3"> 
-                        <img class="d-block w-100" src="{{ asset('images/berita/berita_3.jpg')}}" alt="First slide">
+                        <img class="d-block w-100" src="{{ asset('images/pengumuman/pengumuman_3.jpg')}}" alt="First slide">
                       </div>
                       <div class="media-body">
                         <h5 class="fs-5">Rehlah Dakwah</h5>
@@ -123,7 +124,7 @@
                     </div>
                     <div class="row">
                       <div class="col-md-3">
-                        <img class="d-block w-100" src="{{ asset('images/berita/berita_4.jpg')}}" alt="Second slide">
+                        <img class="d-block w-100" src="{{ asset('images/pengumuman/pengumuman_4.jpg')}}" alt="Second slide">
                       </div>
                       <div class="media-body">
                         <h5 class="fs-5">Ceramah Perdana Ustaz Kazim Elias</h5>

@@ -6,7 +6,7 @@
     <style>
       .carousel-inner{
         height: 50%;
-        max-height: 500px
+        max-height: 600px
       }
     </style>
     <body>
@@ -19,17 +19,13 @@
                             <ol class="carousel-indicators">
                               <li data-target="#carouselImages" data-slide-to="0" class="active"></li>
                               <li data-target="#carouselImages" data-slide-to="1"></li>
-                              <li data-target="#carouselImages" data-slide-to="2"></li>
                             </ol>
                             <div class="carousel-inner">
                               <div class="carousel-item active">
-                                <img class="d-block w-100" src="{{ asset('images/slide1.jpg')}}" alt="First slide">
+                                <img class="img-fluid w-100" src="{{ asset('images/banner_1.png')}}" alt="First slide">
                               </div>
                               <div class="carousel-item">
-                                <img class="d-block w-100" src="{{ asset('images/slide4.jpg')}}" alt="Second slide">
-                              </div>
-                              <div class="carousel-item">
-                                <img class="d-block w-100" src="{{ asset('images/slide3.jpg')}}" alt="Third slide">
+                                <img class="img-fluid w-100" src="{{ asset('images/slide3.jpg')}}" alt="Third slide">
                               </div>
                             </div>
                             <a class="carousel-control-prev" href="#carouselImages" role="button" data-slide="prev">
