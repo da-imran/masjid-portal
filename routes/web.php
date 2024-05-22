@@ -48,6 +48,7 @@ Route::get('/info-korporat/direktori-kakitangan', function () {
 // });
 Route::get('/informasi/berita-semasa','App\Http\Controllers\BeritaSemasaController@index');
 Route::get('/informasi/berita-semasa/{id}', 'App\Http\Controllers\BeritaSemasaController@show')->name('berita.show');
+Route::get('/informasi/pengumuman/{id}', 'App\Http\Controllers\PengumumanController@show')->name('pengumuman.show');
 
 Route::get('/informasi/kemudahan', function () {
     return view('information.kemudahan');
