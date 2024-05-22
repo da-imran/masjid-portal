@@ -44,6 +44,13 @@ return [
             'throw' => false,
         ],
 
+        'api_uploads' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/api_data',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
