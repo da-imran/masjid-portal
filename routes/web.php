@@ -20,6 +20,7 @@ Route::get('/', function () {
 Route::get('/utama', function () {
     return view('index.index');
 });
+Route::get('/utama','App\Http\Controllers\IndexController@index');
 
 // Info Korporat Tab Menu
 Route::get('/info-korporat/perutusan-imam-besar', function () {
