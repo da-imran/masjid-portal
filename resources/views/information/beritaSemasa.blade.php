@@ -26,7 +26,7 @@
                     <tbody>
                       @foreach ( $beritaList as $list )
                         <tr>
-                          <td>{{$count++}}</td>
+                          <td>{{$countB++}}</td>
                           <td><a href="{{ route('berita.show', $list->beritaID) }}">{{$list->berita_titleMS}}</a></td>
                           <td>{{Carbon\Carbon::parse($list->berita_createdAt)->format('d M Y')}}</td>
                           <td>{{$list->berita_visitCount}}</td>
