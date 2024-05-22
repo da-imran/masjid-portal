@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 
 use App\Models\BeritaSemasaModel;
+use App\Models\PengumumanModel;
 
 class IndexController extends Controller
 {
@@ -16,8 +17,9 @@ class IndexController extends Controller
     public function index()
     {
         $beritaList = BeritaSemasaModel::all();
-        $count = 1;
-        return view('index.index',compact("beritaList","count"));
+        $pengumumanList = PengumumanModel::all();
+        $countB = 1;
+        return view('index.index',compact("beritaList","pengumumanList","countB"));
     }
     
     /**
