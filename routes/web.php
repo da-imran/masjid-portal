@@ -43,9 +43,7 @@ Route::get('/info-korporat/direktori-kakitangan', function () {
 });
 
 // Informasi Tab Menu
-// Route::get('/informasi/berita-semasa', function () {
-//     return view('information.beritaSemasa');
-// });
+// Module Berita Semasa & Pengumuman
 Route::get('/informasi/berita-semasa','App\Http\Controllers\BeritaSemasaController@index');
 Route::get('/informasi/berita-semasa/{id}', 'App\Http\Controllers\BeritaSemasaController@show')->name('berita.show');
 Route::get('/informasi/pengumuman/{id}', 'App\Http\Controllers\PengumumanController@show')->name('pengumuman.show');
@@ -56,9 +54,9 @@ Route::get('/informasi/kemudahan', function () {
 Route::get('/informasi/takwim', function () {
     return view('information.takwim');
 });
-Route::get('/informasi/kutipan-tabung-masjid', function () {
-    return view('information.kutipanTabungMasjid');
-});
+
+// Module Kutipan Tabung Masjid
+Route::get('/informasi/kutipan-tabung','App\Http\Controllers\KutipanMasjidController@index');
 
 // Muat Turun Tab Menu
 Route::get('/muat-turun/jadual-kuliah', function () {
