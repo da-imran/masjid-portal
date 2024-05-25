@@ -26,7 +26,7 @@
                     <tbody>
                       @foreach ( $beritaList as $list )
                         <tr>
-                          <td>{{$countB++}}</td>
+                          <td>{{$count++}}</td>
                           <td><a href="{{ route('berita.show', $list->beritaID) }}">{{$list->berita_titleMS}}</a></td>
                           <td>{{Carbon\Carbon::parse($list->berita_createdAt)->format('d M Y')}}</td>
                           <td>{{$list->berita_visitCount}}</td>
@@ -42,10 +42,11 @@
     </body>
     <script>
       new DataTable('#beritaSemasa', {
-        info: false,
+        info: true,
         ordering: false,
-        paging: false,
-        columns: [{width: '5%', targets: 0}, {width: '70%', targets: 1}, null, null]
+        paging: true,
+        columns: [{width: '5%', targets: 0}, {width: '70%', targets: 1}, null, null],
+        lengthMenu: [[10, 20, -1],[10, 20, 'All']]
       });
     </script>
 </html>

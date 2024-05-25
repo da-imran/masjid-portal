@@ -117,7 +117,7 @@
               <a class="dropdown-item" href="{{ url('/informasi/berita-semasa')}}">Berita Semasa</a>
               <a class="dropdown-item" href="/informasi/kemudahan">Kemudahan</a>
               <a class="dropdown-item" href="/informasi/takwim">Takwim</a>
-              <a class="dropdown-item" href="/informasi/kutipan-tabung-masjid">Kutipan Tabung Masjid</a>
+              <a class="dropdown-item" href="{{ url('/informasi/kutipan-tabung')}}">Kutipan Tabung Masjid</a>
             </div>
           </li>
           <li class="nav-item dropdown">
