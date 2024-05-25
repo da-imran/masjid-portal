@@ -1,3 +1,29 @@
+## Portal Masjid Al-Mustaghfirin, Bayan Lepas, Pulau Pinang
+This project is my personal website development for Masjid Al-Mustaghfirin, located in Bayan Lepas, Pulau Pinang. It aims to provide a user-friendly and informative platform for the masjid community. My main references for developing this website are from Masjid Putra, Putrajaya and some several government agencies website such as JAKIM, MAINPP, Zakat, and Wakaf Pulau Pinang.
+
+## Technology Stack
+### Frontend
+- Laravel Framework (Main framework I used for PHP web development)
+- Bootstrap (Implement for the usage of layout, container, table, etc)
+- Javascript and jQuery (DataTables and data manipulation)
+- HTML and CSS
+
+### Backend
+- Laragon (Local dev environment used for running the Laravel applications)
+- SQL Database (Using the built in Laragon database for this project)
+- REST API (To display the prayer time in Penang Zone, retrieved the prayer time from Waktu Solat API : https://mpt-server.vercel.app/)
+
+## Project Features
+- Utama (Page introduction shown related news, announcement and other government website link)
+- Waktu Solat (Display prayer times based on location by current day through API)
+- Info Korporat (Page section for corporate information such as history, corporate profile, organisation chart and more)
+- Informasi (Page section for events & announcements, current news, facilities, fund collection and calendar)
+- Muat Turun (Several notes for community reference to download such as lecture notes, lecture timeline and misc. forms)
+- Hubungi Kami (Offer a clear way for users to reach out to the masjid administration)
+
+## Disclaimer
+This project is done to further developing my technical skills as developer and may not be fully deployed as a production-ready website. Feel free to clone, make request and give suggestion/comments for this project.
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
