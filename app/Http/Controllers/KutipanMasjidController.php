@@ -13,8 +13,10 @@ class KutipanMasjidController extends Controller
      */
     public function index()
     {
-        $kutipanList = KutipanMasjidModel::all();
         $count = 1;
+        $request = new Request();
+        $kutipanList = KutipanMasjidModel::all();
+        $visitorCount = app(IndexController::class)->recordVisitor($request);
 
         $dayName = [];
         $monthName = [];
@@ -84,7 +86,7 @@ class KutipanMasjidController extends Controller
             }
         }
 
-        return view('information/kutipanTabungMasjid',compact("kutipanList","dayName","monthName","count"));
+        return view('information/kutipanTabungMasjid',compact("kutipanList","dayName","monthName","count","visitorCount"));
     }
 
     /**

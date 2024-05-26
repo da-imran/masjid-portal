@@ -2,23 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-
-use Carbon\Carbon;
 
 class APIController extends Controller
 {
     public function ApiSolat()
     {
+        $request =  new Request();
         $response = Http::get('https://api.waktusolat.app/v2/solat/PNG01');
         $fileName = 'api_data/waktusolat_' . date('m') . '.json';
-
+        
         $dataTime = $response->json();
+        file_put_contents( $fileName, json_encode($dataTime["prayers"]));
+
         if($response->failed()){
           \Log::error('Failed to retrieve prayer times: ' . $response->statusText());
-        }    
+        }
         
         foreach ($dataTime["prayers"] as &$day) {
           foreach ($day as $prayer => $timestamp) {
@@ -27,13 +31,32 @@ class APIController extends Controller
             }
           }
         }
-        $currentDay = Carbon::now()->format('d') - 1;
-        if(!file_exists($fileName)){
-          $jsonData = json_encode($dataTime["prayers"][$currentDay]);
-          file_put_contents( $fileName, $jsonData);
-        }
 
-        $waktuSolat = $dataTime["prayers"][$currentDay];
+        /* Order of prayer time data
+            0 - asar
+            1 - fajr / subuh
+            2 - syuruk
+            3 - maghrib
+            4 - zuhur
+            5 - hijri (date)
+            6 - isha
+            7 - day
+        */
+        $currentDay = Carbon::now()->format('d') - 1;
+        $data = json_decode(file_get_contents($fileName),true);
+        $waktuSolat = [];
+        if(is_null($dataTime)){
+            $data[$currentDay]['asr'] = Carbon::createFromTimestamp($data[$currentDay]['asr'])->format('h:i A');
+            $data[$currentDay]['fajr'] = Carbon::createFromTimestamp($data[$currentDay]['fajr'])->format('h:i A');
+            $data[$currentDay]['syuruk'] = Carbon::createFromTimestamp($data[$currentDay]['syuruk'])->format('h:i A');
+            $data[$currentDay]['maghrib'] = Carbon::createFromTimestamp($data[$currentDay]['maghrib'])->format('h:i A');
+            $data[$currentDay]['dhuhr'] = Carbon::createFromTimestamp($data[$currentDay]['dhuhr'])->format('h:i A');
+            $data[$currentDay]['isha'] = Carbon::createFromTimestamp($data[$currentDay]['isha'])->format('h:i A');
+            $waktuSolat = $data[$currentDay];
+          }
+        else{
+          $waktuSolat = $dataTime["prayers"][$currentDay];
+        }
         return $waktuSolat;
     }
 }

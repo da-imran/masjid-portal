@@ -14,9 +14,12 @@ class BeritaSemasaController extends Controller
      */
     public function index()
     {
-        $beritaList = BeritaSemasaModel::all();
         $count = 1;
-        return view('information.beritaSemasa',compact("beritaList","count"));
+        $request = new Request();
+        $beritaList = BeritaSemasaModel::all();
+        $visitorCount = app(IndexController::class)->recordVisitor($request);
+        
+        return view('information.beritaSemasa',compact("beritaList","count","visitorCount"));
     }
 
     /**
@@ -40,12 +43,14 @@ class BeritaSemasaController extends Controller
      */
     public function show(string $id)
     {
+        $request = new Request();
         $beritaList = BeritaSemasaModel::where('beritaID',$id)->get();
         $beritaCount = BeritaSemasaModel::where('beritaID',$id)->first()->berita_visitCount;
+        $visitorCount = app(IndexController::class)->recordVisitor($request);
         $beritaCount++;
 
         DB::table('mm_berita_semasa')->where('beritaID',$id)->update(['berita_visitCount' => $beritaCount]);
-        return view('information.beritaSemasaContent',compact("beritaList",));
+        return view('information.beritaSemasaContent',compact("beritaList","visitorCount"));
     }
 
     /**
