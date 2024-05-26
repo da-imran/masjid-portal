@@ -2,7 +2,6 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
        @include('root.headerMetadata')
-       <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     </head>
     <style>
        

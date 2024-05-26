@@ -37,9 +37,17 @@
               </div>
             </div>
           </div>
-        @include('index.indexBottom')
+          @include('index.indexBottom')
+          <script>
+            new DataTable('#beritaSemasa', {
+              info: true,
+              ordering: false,
+              paging: true,
+              columns: [{width: '5%', targets: 0}, {width: '70%', targets: 1}, null, null],
+              lengthMenu: [[10, 20, -1],[10, 20, 'All']]
+            });
+          </script>
     </body>
-    <script>
-     
-    </script>
+   
+    
 </html>
