@@ -38,8 +38,10 @@ class PengumumanController extends Controller
      */
     public function show(string $id)
     {
+        $request = Request();
         $pengumumanList = PengumumanModel::where('pengumumanID',$id)->get();
-        return view('information.pengumumanContent',compact("pengumumanList",));
+        $visitorCount = app(IndexController::class)->recordVisitor($request);
+        return view('information.pengumumanContent',compact("pengumumanList","visitorCount"));
     }
 
     /**
