@@ -23,24 +23,7 @@ Route::get('/utama', function () {
 Route::get('/utama','App\Http\Controllers\IndexController@index');
 
 // Info Korporat Tab Menu
-Route::get('/info-korporat/perutusan-imam-besar', function () {
-    return view('corporate.perutusanImamBesar');
-});
-Route::get('/info-korporat/sejarah-masjid', function () {
-    return view('corporate.sejarahMasjid');
-});
-Route::get('/info-korporat/profil-korporat', function () {
-    return view('corporate.profilKorporat');
-});
-Route::get('/info-korporat/logo', function () {
-    return view('corporate.logo');
-});
-Route::get('/info-korporat/carta-organisasi', function () {
-    return view('corporate.cartaOrganisasi');
-});
-Route::get('/info-korporat/direktori-kakitangan', function () {
-    return view('corporate.direktoriKakitangan');
-});
+Route::get('/info-korporat/{id}','App\Http\Controllers\InfoKorporatController@index');
 
 // Informasi Tab Menu
 // Module Berita Semasa & Pengumuman
@@ -48,28 +31,17 @@ Route::get('/informasi/berita-semasa','App\Http\Controllers\BeritaSemasaControll
 Route::get('/informasi/berita-semasa/{id}', 'App\Http\Controllers\BeritaSemasaController@show')->name('berita.show');
 Route::get('/informasi/pengumuman/{id}', 'App\Http\Controllers\PengumumanController@show')->name('pengumuman.show');
 
-Route::get('/informasi/kemudahan', function () {
-    return view('information.kemudahan');
-});
-Route::get('/informasi/takwim', function () {
-    return view('information.takwim');
-});
+// Module Kemudahan
+Route::get('/informasi/kemudahan','App\Http\Controllers\KemudahanController@index');
+
+// Module Takwim
+Route::get('/informasi/takwim','App\Http\Controllers\TakwimController@index');
 
 // Module Kutipan Tabung Masjid
 Route::get('/informasi/kutipan-tabung','App\Http\Controllers\KutipanMasjidController@index');
 
-// Muat Turun Tab Menu
-Route::get('/muat-turun/jadual-kuliah', function () {
-    return view('download.jadualKuliah');
-});
-Route::get('/muat-turun/nota-kuliah', function () {
-    return view('download.notaKuliah');
-});
-Route::get('/muat-turun/borang', function () {
-    return view('download.borang');
-});
+// Module Turun Tab
+Route::get('/muat-turun/{id}','App\Http\Controllers\MuatTurunController@index');
 
 // Hubungi Kami Tab Menu
-Route::get('/hubungi-kami', function () {
-    return view('contact');
-});
+Route::get('/hubungi-kami','App\Http\Controllers\HubungiController@index');
