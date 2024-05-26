@@ -9,8 +9,18 @@
         <div class="row">
           <div class="col-6 col-md-4 mt-3 mb-3">
             <div><h1 style="font-size: 25px"><b>Jumlah Pelawat</b></h1></div>
-            <div>Hari Ini</div> 
-            <div>Keseluruhan</div> 
+            <div class="row">
+              <div class="col-md-3">
+                <div>Hari Ini</div> 
+                <div>Bulan Ini</div> 
+                <div>Keseluruhan</div> 
+              </div>
+              <div class="col-md-3">
+                <div>{{$visitorCount->original['dailyCount']}}</div> 
+                <div>{{$visitorCount->original['monthlyCount']}}</div> 
+                <div>{{$visitorCount->original['overallCount']}}</div> 
+              </div>
+            </div>
           </div>
           <div class="col-6 col-md-4  mt-3 mb-3">
             <div><h1 style="font-size: 25px"><b>Pautan Web</b></h1></div>
@@ -32,3 +42,4 @@
         </div>
     </div>
   </div>
+  <script>

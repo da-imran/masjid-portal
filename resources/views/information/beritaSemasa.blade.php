@@ -2,7 +2,6 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
        @include('root.headerMetadata')
-       <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     </head>
     <style>
        
@@ -41,12 +40,6 @@
         @include('index.indexBottom')
     </body>
     <script>
-      new DataTable('#beritaSemasa', {
-        info: true,
-        ordering: false,
-        paging: true,
-        columns: [{width: '5%', targets: 0}, {width: '70%', targets: 1}, null, null],
-        lengthMenu: [[10, 20, -1],[10, 20, 'All']]
-      });
+     
     </script>
 </html>

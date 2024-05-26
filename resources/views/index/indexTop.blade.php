@@ -101,12 +101,12 @@
               INFO KORPORAT
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="/info-korporat/perutusan-imam-besar">Perutusan Imam Besar</a>
-              <a class="dropdown-item" href="/info-korporat/sejarah-masjid">Sejarah Masjid</a>
-              <a class="dropdown-item" href="/info-korporat/profil-korporat">Profil Korporat</a>
-              <a class="dropdown-item" href="/info-korporat/logo">Logo</a>
-              <a class="dropdown-item" href="/info-korporat/carta-organisasi">Carta Organisasi</a>
-              <a class="dropdown-item" href="/info-korporat/direktori-kakitangan">Direktori Kakitangan</a>
+              <a class="dropdown-item" href="{{url('/info-korporat/perutusan-imam-besar')}}">Perutusan Imam Besar</a>
+              <a class="dropdown-item" href="{{url('/info-korporat/sejarah-masjid')}}">Sejarah Masjid</a>
+              <a class="dropdown-item" href="{{url('/info-korporat/profil-korpora')}}t">Profil Korporat</a>
+              <a class="dropdown-item" href="{{url('/info-korporat/logo')}}">Logo</a>
+              <a class="dropdown-item" href="{{url('/info-korporat/carta-organisasi')}}">Carta Organisasi</a>
+              <a class="dropdown-item" href="{{url('/info-korporat/direktori-kakitangan')}}">Direktori Kakitangan</a>
             </div>
           </li>
           <li class="nav-item dropdown">
@@ -115,8 +115,8 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <a class="dropdown-item" href="{{ url('/informasi/berita-semasa')}}">Berita Semasa</a>
-              <a class="dropdown-item" href="/informasi/kemudahan">Kemudahan</a>
-              <a class="dropdown-item" href="/informasi/takwim">Takwim</a>
+              <a class="dropdown-item" href="{{ url('/informasi/kemudahan')}}">Kemudahan</a>
+              <a class="dropdown-item" href="{{ url('/informasi/takwim')}}">Takwim</a>
               <a class="dropdown-item" href="{{ url('/informasi/kutipan-tabung')}}">Kutipan Tabung Masjid</a>
             </div>
           </li>
@@ -125,19 +125,19 @@
               MUAT TURUN
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="/muat-turun/jadual-kuliah">Jadual Kuliah</a>
-              <a class="dropdown-item" href="/muat-turun/nota-kuliah">Nota Kuliah</a>
-              <a class="dropdown-item" href="/muat-turun/borang">Borang</a>
+              <a class="dropdown-item" href="{{ url('/muat-turun/jadual-kuliah')}}">Jadual Kuliah</a>
+              <a class="dropdown-item" href="{{ url('/muat-turun/nota-kuliah')}}">Nota Kuliah</a>
+              <a class="dropdown-item" href="{{ url('/muat-turun/borang')}}">Borang</a>
             </div>
           </li>
           <li class="nav-item">
             <a class="navbar-link" href="/hubungi-kami">HUBUNGI KAMI</a>
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
+        {{-- <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" style="font-size: 10px; border-radius: 15px 15px 15px 15px" type="search" placeholder="Carian">
             <button class="btn btn-outline-primary my-2 my-sm-0 btn-sm" type="submit">Carian</button>
-        </form>
+        </form> --}}
       </div>
     </nav>
   </div>
