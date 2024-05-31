@@ -1,5 +1,5 @@
 ## Portal Masjid Al-Mustaghfirin, Bayan Lepas, Pulau Pinang
-This project is my personal website development for Masjid Al-Mustaghfirin, located in Bayan Lepas, Pulau Pinang. It aims to provide a user-friendly and informative platform for the masjid community. My main references for developing this website are from Masjid Putra, Putrajaya and some several government agencies website such as JAKIM, MAINPP, Zakat, and Wakaf Pulau Pinang.
+This project is my personal website development for Masjid Jamek Sungai Tiram @ Masjid Al-Mustaghfirin, located in Bayan Lepas, Pulau Pinang, Malaysia. It aims to provide a user-friendly and informative platform for the masjid community. My main references for developing this website are from Masjid Putra, Putrajaya and some several government agencies website such as JAKIM, MAINPP, Zakat, and Wakaf Pulau Pinang.
 
 ## Technology Stack
 ### Frontend
@@ -19,7 +19,7 @@ This project is my personal website development for Masjid Al-Mustaghfirin, loca
 - Info Korporat (Page section for corporate information such as history, corporate profile, organisation chart and more)
 - Informasi (Page section for events & announcements, current news, facilities, fund collection and calendar)
 - Muat Turun (Several notes for community reference to download such as lecture notes, lecture timeline and misc. forms)
-- Hubungi Kami (Offer a clear way for users to reach out to the masjid administration)
+- Hubungi Kami (Offer a clear way for users to reach out to the mosque administration)
 
 ## Disclaimer
 This project is done to further developing my technical skills as developer and may not be fully deployed as a production-ready website. Feel free to clone, make request and give suggestion/comments for this project.
