@@ -19,13 +19,13 @@
                       <tr>
                         <th>No.</th>
                         <th>Hari</th>
-                        <th>Jumlah Hari</th>
+                        <th>Jumlah Harian</th>
                         <th>Minggu</th>
-                        <th>Jumlah Minggu</th>
+                        <th>Jumlah Mingguan</th>
                         <th>Bulan</th>
-                        <th>Jumlah Bulan</th>
+                        <th>Jumlah Bulanan</th>
                         <th>Tahun</th>
-                        <th>Jumlah Tahun</th>
+                        <th>Jumlah Keseluruhan</th>
                       </tr>
                     </thead>
                     <tbody>
