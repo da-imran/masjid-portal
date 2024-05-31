@@ -35,23 +35,18 @@ class IndexController extends Controller
         $visitor = VisitorModel::where('visitorIP', $userIp)->first();
         
         $today = Carbon::now();
-        $dailyCounts = DB::table('mm_visitor')
-            ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as count'))
-            ->whereDate('created_at', '=', $today->format('Y-m-d'))
-            ->groupBy('date')
-            ->get();
+        $dailyCounts = (DB::table('mm_visitor')
+            ->whereDay('created_at','=',$today->day)
+            ->select()
+            ->get())->count();
 
-        $monthlyCounts = DB::table('mm_visitor')
-            ->select(DB::raw('YEAR(created_at) as year'), DB::raw('MONTH(created_at) as month'), DB::raw('count(*) as count'))
+        $monthlyCounts = (DB::table('mm_visitor')
             ->whereMonth('created_at', '=', $today->month)
-            ->whereYear('created_at', '=', $today->year)
-            ->groupBy('year', 'month')
-            ->get();
+            ->get())->count();
 
-        $dailyCounts =  $dailyCounts[0]->count;
-        $monthlyCounts = $monthlyCounts[0]->count;
         $overallCount = DB::table('mm_visitor')->count();
-        
+
+       
         if(!$visitor){
             $visitor = new VisitorModel();
             $visitor->visitorIP = $userIp;
