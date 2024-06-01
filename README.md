@@ -1,4 +1,4 @@
-## Portal Masjid Al-Mustaghfirin, Bayan Lepas, Pulau Pinang
+<h2 align="center">Portal Masjid Al-Mustaghfirin, Bayan Lepas, Pulau Pinang</h2>
 This project is my personal website development for Masjid Jamek Sungai Tiram @ Masjid Al-Mustaghfirin, located in Bayan Lepas, Pulau Pinang, Malaysia. It aims to provide a user-friendly and informative platform for the masjid community. My main references for developing this website are from Masjid Putra, Putrajaya and some several government agencies website such as JAKIM, MAINPP, Zakat, and Wakaf Pulau Pinang.
 
 ## Technology Stack
