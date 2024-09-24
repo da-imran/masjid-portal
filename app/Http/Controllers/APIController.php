@@ -3,26 +3,24 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-
-use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class APIController extends Controller
 {
     public function ApiSolat()
     {
-        $request =  new Request();
         $response = Http::get('https://api.waktusolat.app/v2/solat/PNG01');
+        if($response->failed()){
+          Log::error('Failed to retrieve prayer times: ' . $response->status());
+          return response()->json(['error' => 'Failed to retrieve prayer times.'], 500);
+        }
         $fileName = 'api_data/waktusolat_' . date('m') . '.json';
         
         $dataTime = $response->json();
         file_put_contents( $fileName, json_encode($dataTime["prayers"]));
 
-        if($response->failed()){
-          \Log::error('Failed to retrieve prayer times: ' . $response->statusText());
-        }
+        
         
         foreach ($dataTime["prayers"] as &$day) {
           foreach ($day as $prayer => $timestamp) {
@@ -57,6 +55,7 @@ class APIController extends Controller
         else{
           $waktuSolat = $dataTime["prayers"][$currentDay];
         }
-        return $waktuSolat;
+        //return $waktuSolat;
+        return response()->json(['data' => $waktuSolat], 200);
     }
 }

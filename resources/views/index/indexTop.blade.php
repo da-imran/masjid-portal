@@ -42,7 +42,15 @@
   }
 </style>
 @php
-  $waktuSolat = app('App\Http\Controllers\APIController')->ApiSolat();
+  $response = app('App\Http\Controllers\APIController')->ApiSolat();
+  $waktuSolat = null;
+  $errorMessage = null;
+
+  if ($response->status() === 200) {
+    $waktuSolat = $response->getData()->data;
+  } else {
+    $errorMessage = $response->getData()->error;
+  }
 @endphp
 <div class="top-bar">
     <div class="container">
@@ -51,14 +59,20 @@
                 <table width="100%" align="center" border="0" style="font-size:12px;">
                     <tbody>
                       <tr>
-                        <td align="right" valign="top"><a href="https://www.e-solat.gov.my/" target="_new" style="color: #000000"><u>WAKTU SOLAT</u></a> BAGI PULAU PINANG</td>
-                        <td align="right" valign="top"><strong> &nbsp;&nbsp;- </strong></td>
-                        <td align="right" valign="top">SUBUH</td><td align="left" valign="top"> : <label style="font-weight:700;" id="fajr">{{$waktuSolat["fajr"]}}</label> | </td>
-                        <td align="right" valign="top">SYURUK</td><td align="left" valign="top"> : <label style="font-weight:700;" id="syuruk">{{$waktuSolat["syuruk"]}}</label> | </td>
-                        <td align="right" valign="top">ZOHOR</td><td align="left" valign="top"> : <label style="font-weight:700;" id="dhuhr">{{$waktuSolat["dhuhr"]}}</label> | </td>
-                        <td align="right" valign="top">ASAR</td><td align="left" valign="top"> : <label style="font-weight:700;" id="asr">{{$waktuSolat["asr"]}}</label> | </td>
-                        <td align="right" valign="top">MAGHRIB</td><td align="left" valign="top"> : <label style="font-weight:700;" id="maghrib">{{$waktuSolat["maghrib"]}}</label> | </td>
-                        <td align="right" valign="top">ISYAK</td><td align="left" valign="top"> : <label style="font-weight:700;" id="isyak">{{$waktuSolat["isha"]}}</label> </td>
+                        @if ($errorMessage)
+                          <td colspan="14" align="center" valign="top" style="color: red; font-weight: bold;">
+                            {{ $errorMessage }}
+                          </td>
+                        @else
+                          <td align="right" valign="top"><a href="https://www.e-solat.gov.my/" target="_new" style="color: #000000"><u>WAKTU SOLAT</u></a> BAGI PULAU PINANG</td>
+                          <td align="right" valign="top"><strong> &nbsp;&nbsp;- </strong></td>
+                          <td align="right" valign="top">SUBUH</td><td align="left" valign="top"> : <label style="font-weight:700;" id="fajr">{{$waktuSolat->fajr}}</label> | </td>
+                          <td align="right" valign="top">SYURUK</td><td align="left" valign="top"> : <label style="font-weight:700;" id="syuruk">{{$waktuSolat->syuruk}}</label> | </td>
+                          <td align="right" valign="top">ZOHOR</td><td align="left" valign="top"> : <label style="font-weight:700;" id="dhuhr">{{$waktuSolat->dhuhr}}</label> | </td>
+                          <td align="right" valign="top">ASAR</td><td align="left" valign="top"> : <label style="font-weight:700;" id="asr">{{$waktuSolat->asr}}</label> | </td>
+                          <td align="right" valign="top">MAGHRIB</td><td align="left" valign="top"> : <label style="font-weight:700;" id="maghrib">{{$waktuSolat->maghrib}}</label> | </td>
+                          <td align="right" valign="top">ISYAK</td><td align="left" valign="top"> : <label style="font-weight:700;" id="isyak">{{$waktuSolat->isha}}</label> </td>
+                        @endif
                       </tr>
                 </tbody></table>
             </div>
