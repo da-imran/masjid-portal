@@ -108,7 +108,7 @@
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
           <li class="nav-item">
-            <a class="navbar-link" href="http://masjid-portal.test/utama">UTAMA</a>
+            <a class="navbar-link"  href="{{url('/utama')}}">UTAMA</a>
           </li>
           <li class="nav-item dropdown">
             <a class="dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

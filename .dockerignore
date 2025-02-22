@@ -1,0 +1,30 @@
+# Node modules
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Composer dependencies
+vendor
+
+# Laravel environment files
+.env
+.env.*.local
+
+# IDE & Editor files
+.idea
+.vscode
+*.swp
+
+# Logs
+storage/logs/*.log
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# Cache files
+bootstrap/cache/*.php
+
+# Build artifacts
+/public/api_data
+/public/js
+/public/css
