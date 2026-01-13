@@ -5,11 +5,18 @@
        <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     </head>
     <style>
-       
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .content-wrapper {
+            flex: 1;
+        }
     </style>
     <body>
         @include('index.indexTop')
-          <div class="container">
+          <div class="container content-wrapper">
             <div class="row">
               <div class="col">
                 <h6 class="text mt-3" style="font-size: 20px"><b>VISI</b></h6>

@@ -2,9 +2,10 @@
   .footer {
     color: white;
     background-color: rgb(31, 31, 31);
+    margin-top: auto;
   }
 </style>
-<div class="footer">
+<div class="footer mt-auto">
     <div class="container">
         <div class="row">
           <div class="col-6 col-md-4 mt-3 mb-3">

@@ -1,111 +1,109 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-       @include('root.headerMetadata')
-    </head>
-    <style>
-       
-    </style>
-    <body>
-        @include('index.indexTop')
-          <div class="container">
-            <div class="row">
-              <div class="col-md-9">
-                <h6 class="text mt-3" style="font-size: 20px"><b>Kutipan Tabung Masjid</b></h6>
-                <p class="text mt-2" style="font-size: 14px"><i>Jumlah kutipan adalah di dalam Ringgit Malaysia (RM)</i></h6>
-                <div class="mt-3 mb-5 p-3 border">
-                  <table id="kutipanTabung" class="table table-striped" style="width:100%">
-                    <thead>
-                      <tr>
-                        <th>No.</th>
-                        <th>Hari</th>
-                        <th>Jumlah Harian</th>
-                        <th>Minggu</th>
-                        <th>Jumlah Mingguan</th>
-                        <th>Bulan</th>
-                        <th>Jumlah Bulanan</th>
-                        <th>Tahun</th>
-                        <th>Jumlah Keseluruhan</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      @foreach ( $kutipanList as $list )
-                        <tr>
-                          <td>{{$count++}}</td>
-                          <td>{{$dayName[$list->kutipanID]}}</td>
-                          <td>{{$list->kutipanDayTotal}}</td>
-                          <td>{{$list->kutipanWeek}}</td>
-                          <td>{{$list->kutipanWeekTotal}}</td>
-                          <td>{{$monthName[$list->kutipanID]}}</td>
-                          <td>{{$list->kutipanMonthTotal}}</td>
-                          <td>{{$list->kutipanYear}}</td>
-                          <td>{{$list->kutipanTotal}}</td>
-                        </tr>
-                      @endforeach
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <h6 class="text mt-3" style="font-size: 20px"><b>Jom Infaq</b></h6>
-                <p class="text mt-2" style="font-size: 14px"><i>Sumbangan boleh dilakukan dengan mengimbas atau klik kod QR</i></h6>
-                <div class="mt-3 mb-5">
-                  <a href="https://infaqpay.my/go/masjidalmustaghfirinsungaitiram"><img class="img-fluid mt-3" style="width: 200px; height: 250px" src="{{ asset('images/infaq_qr.png')}}"></a>
-                </div>
-              </div>
-            </div>
-          </div>
-        @include('index.indexBottom')
-    </body>
-    <script>
-      // new DataTable('#kutipanTabung', {
-      //   info: true,
-      //   ordering: true,
-      //   paging: true,
-      //   columns: [{width: '5%', targets: 0}, null, null, null, null, null, null, null, null],
-      //   lengthMenu: [[10, 20, -1],[10, 20, 'All']],
-      //   columnDefs: [
-      //       { orderable: true, className: 'reorder', targets: [1,3,5,7] },
-      //       { orderable: false, targets: '_all' }
-      //   ]
-      // });
+@extends('layouts.app')
 
-      var groupColumn = 5;
-      var table = $('#kutipanTabung').DataTable({
-        columnDefs: [{ visible: false, targets: groupColumn }],
-        order: [[groupColumn, 'asc']],
-        lengthMenu: [[10, 20, -1],[10, 20, 'All']],
-        displayLength: 10,
-        drawCallback: function (settings) {
-            var api = this.api();
-            var rows = api.rows({ page: 'current' }).nodes();
-            var last = null;
-    
-            api.column(groupColumn, { page: 'current' })
-                .data()
-                .each(function (group, i) {
-                    if (last !== group) {
-                        $(rows)
-                            .eq(i)
-                            .before(
-                                '<tr class="group"><td colspan="10">' +
-                                    group +
-                                    '</td></tr>'
-                            );
-                        last = group;
-                    }
-                });
-        }
-      });
+@section('content')
+<div class="row">
+  <div class="col-md-9">
+    <h6 class="text mt-3" style="font-size: 20px"><b>Kutipan Tabung Masjid</b></h6>
+    <p class="text mt-2" style="font-size: 14px"><i>Jumlah kutipan adalah di dalam Ringgit Malaysia (RM)</i></h6>
+    <div class="mt-3 mb-5 p-3 border">
+      <table class="table table-striped" style="width:100%">
+        <thead>
+          <tr>
+            <th>Hari</th>
+            <th>Jumlah Harian</th>
+            <th>Minggu</th>
+            <th>Bulan / Tahun</th>
+          </tr>
+        </thead>
+        <tbody>
+          @php
+            $currentWeek = null;
+            $currentMonth = null;
+            $weekTotal = 0;
+            $monthTotal = 0;
+          @endphp
 
-      $('#kutipanTabung tbody').on('click', 'tr.group', function () {
-        var currentOrder = table.order()[0];
-        if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-            table.order([groupColumn, 'desc']).draw();
-        }
-        else {
-            table.order([groupColumn, 'asc']).draw();
-        }
-      });
-    </script>
-</html>
+          @foreach ( $kutipanList as $list )
+            @php
+              $isMonthBreak = ($currentMonth !== $list->month_name_ms . ' ' . $list->year);
+              $isWeekBreak = ($currentWeek !== $list->week || $isMonthBreak);
+
+              // Week footer: display before starting new week
+              if ($isWeekBreak && $currentWeek !== null) {
+            @endphp
+                <tr class="week-footer" style="background-color: #e8f5e9; font-weight: bold;">
+                  <td colspan="2">Jumlah Minggu Ke-{{$currentWeek}}</td>
+                  <td colspan="2">RM {{ number_format($weekTotal, 2) }}</td>
+                </tr>
+            @php
+                $weekTotal = 0;
+              }
+
+              // Month footer: display before starting new month
+              if ($isMonthBreak && $currentMonth !== null) {
+            @endphp
+                <tr class="month-footer" style="background-color: #fff3e0; font-weight: bold;">
+                  <td colspan="3">Jumlah Bulan {{$currentMonth}}</td>
+                  <td>RM {{ number_format($monthTotal, 2) }}</td>
+                </tr>
+            @php
+                $monthTotal = 0;
+              }
+
+              // Month header
+              if ($isMonthBreak) {
+            @endphp
+                <tr class="group" style="background-color: #f0f0f0; font-weight: bold;">
+                  <td colspan="4">{{$list->month_name_ms}} {{$list->year}}</td>
+                </tr>
+            @php
+              }
+
+              // Accumulate totals
+              $weekTotal += $list->day_total;
+              $monthTotal += $list->day_total;
+              $currentWeek = $list->week;
+              $currentMonth = $list->month_name_ms . ' ' . $list->year;
+            @endphp
+
+            <tr>
+              <td>{{$list->day_name_ms}}</td>
+              <td>{{$list->day_total}}</td>
+              <td>{{$list->week}}</td>
+              <td>{{$list->month_name_ms}} {{$list->year}}</td>
+            </tr>
+
+            @php
+              // Handle last row - add week and month footers
+              if ($loop->last) {
+            @endphp
+                <tr class="week-footer" style="background-color: #e8f5e9; font-weight: bold;">
+                  <td colspan="2">Jumlah Minggu Ke-{{$currentWeek}}</td>
+                  <td colspan="2">RM {{ number_format($weekTotal, 2) }}</td>
+                </tr>
+                <tr class="month-footer" style="background-color: #fff3e0; font-weight: bold;">
+                  <td colspan="3">Jumlah Bulan {{$currentMonth}}</td>
+                  <td>RM {{ number_format($monthTotal, 2) }}</td>
+                </tr>
+            @php
+              }
+            @endphp
+          @endforeach
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="d-flex justify-content-center mt-4">
+        {{ $kutipanList->appends(['sort' => request('sort')])->links() }}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <h6 class="text mt-3" style="font-size: 20px"><b>Jom Infaq</b></h6>
+    <p class="text mt-2" style="font-size: 14px"><i>Sumbangan boleh dilakukan dengan mengimbas atau klik kod QR</i></h6>
+    <div class="mt-3 mb-5">
+      <a href="https://infaqpay.my/go/masjidalmustaghfirinsungaitiram"><img class="img-fluid mt-3" style="width: 200px; height: 250px" src="{{ asset('images/infaq_qr.png')}}"></a>
+    </div>
+  </div>
+</div>
+@endsection

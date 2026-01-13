@@ -2,13 +2,21 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
        @include('root.headerMetadata')
+       <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     </head>
     <style>
-       
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .content-wrapper {
+            flex: 1;
+        }
     </style>
     <body>
         @include('index.indexTop')
-          <div class="container">
+          <div class="container content-wrapper">
             <div class="row">
               <div class="col-md-10">
                 <h6 class="text mt-3" style="font-size: 20px"><b>Berita Semasa</b></h6>
@@ -23,12 +31,13 @@
                       </tr>
                     </thead>
                     <tbody>
+                      @php $count = 1; @endphp
                       @foreach ( $beritaList as $list )
                         <tr>
                           <td>{{$count++}}</td>
-                          <td><a href="{{ route('berita.show', $list->beritaID) }}">{{$list->berita_titleMS}}</a></td>
-                          <td>{{Carbon\Carbon::parse($list->berita_createdAt)->format('d M Y')}}</td>
-                          <td>{{$list->berita_visitCount}}</td>
+                          <td><a href="{{ route('berita.show', $list->id) }}">{{$list->title_ms}}</a></td>
+                          <td>{{ \Carbon\Carbon::parse($list->created_at)->format('d M Y') }}</td>
+                          <td>{{$list->view_count}}</td>
                         </tr>
                       @endforeach
                     </tbody>
@@ -48,6 +57,6 @@
             });
           </script>
     </body>
-   
-    
+
+
 </html>

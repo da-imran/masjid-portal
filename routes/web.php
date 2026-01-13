@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Controllers\Web\IndexController;
+use App\Http\Controllers\Web\BeritaController;
+use App\Http\Controllers\Web\PengumumanController;
+use App\Http\Controllers\Web\KutipanController;
+use App\Http\Controllers\Web\CorporateController;
+use App\Http\Controllers\Web\DownloadController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,35 +19,43 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Main Route
-Route::get('/', function () {
-    return view('welcome');
+// Home Page (using existing index view)
+Route::get('/', [IndexController::class, 'index'])->name('home');
+
+// Information Routes
+Route::prefix('info')->group(function () {
+    Route::get('/berita-semasa', [BeritaController::class, 'index'])->name('berita.index');
+    Route::get('/berita-semasa/{id}', [BeritaController::class, 'show'])->name('berita.show');
+    Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
+    Route::get('/pengumuman/{id}', [PengumumanController::class, 'show'])->name('pengumuman.show');
+    Route::get('/kutipan-tabung-masjid', [KutipanController::class, 'index'])->name('kutipan.index');
+    Route::get('/kemudahan', function () { return view('information.kemudahan'); })->name('kemudahan');
+    Route::get('/takwim', function () { return view('information.takwim'); })->name('takwim');
 });
-Route::get('/utama', function () {
-    return view('index.index');
+
+// Corporate Routes
+Route::prefix('corporate')->group(function () {
+    Route::get('/profil-korporat', [CorporateController::class, 'profil'])->name('corporate.profil');
+    Route::get('/sejarah-masjid', [CorporateController::class, 'sejarah'])->name('corporate.sejarah');
+    Route::get('/carta-organisasi', [CorporateController::class, 'carta'])->name('corporate.carta');
+    Route::get('/direktori-kakitangan', [CorporateController::class, 'direktori'])->name('corporate.direktori');
+    Route::get('/perutusan-imam-besar', [CorporateController::class, 'perutusan'])->name('corporate.perutusan');
+    Route::get('/logo', [CorporateController::class, 'logo'])->name('corporate.logo');
 });
-Route::get('/utama','App\Http\Controllers\IndexController@index');
 
-// Info Korporat Tab Menu
-Route::get('/info-korporat/{id}','App\Http\Controllers\InfoKorporatController@index');
+// Download Routes
+Route::prefix('download')->group(function () {
+    Route::get('/jadual-kuliah', [DownloadController::class, 'jadual'])->name('download.jadual');
+    Route::get('/nota-kuliah', [DownloadController::class, 'nota'])->name('download.nota');
+    Route::get('/borang', [DownloadController::class, 'borang'])->name('download.borang');
+});
 
-// Informasi Tab Menu
-// Module Berita Semasa & Pengumuman
-Route::get('/informasi/berita-semasa','App\Http\Controllers\BeritaSemasaController@index');
-Route::get('/informasi/berita-semasa/{id}', 'App\Http\Controllers\BeritaSemasaController@show')->name('berita.show');
-Route::get('/informasi/pengumuman/{id}', 'App\Http\Controllers\PengumumanController@show')->name('pengumuman.show');
+// Contact
+Route::get('/hubungi', function () {
+    return view('contact');
+})->name('contact');
 
-// Module Kemudahan
-Route::get('/informasi/kemudahan','App\Http\Controllers\KemudahanController@index');
-
-// Module Takwim
-Route::get('/informasi/takwim','App\Http\Controllers\TakwimController@index');
-
-// Module Kutipan Tabung Masjid
-Route::get('/informasi/kutipan-tabung','App\Http\Controllers\KutipanMasjidController@index');
-
-// Module Turun Tab
-Route::get('/muat-turun/{id}','App\Http\Controllers\MuatTurunController@index');
-
-// Hubungi Kami Tab Menu
-Route::get('/hubungi-kami','App\Http\Controllers\HubungiController@index');
+// Fallback
+Route::fallback(function () {
+    return redirect('/');
+});
