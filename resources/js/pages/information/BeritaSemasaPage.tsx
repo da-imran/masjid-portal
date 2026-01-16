@@ -10,9 +10,12 @@ const BeritaSemasaPage: React.FC = () => {
         const fetchBerita = async () => {
             try {
                 const response = await api.get<NewsItem[]>('/api/berita');
-                setBeritaList(response.data);
+                // Ensure response.data is an array
+                const data = Array.isArray(response.data) ? response.data : [];
+                setBeritaList(data);
             } catch (err) {
                 console.error('Failed to fetch berita:', err);
+                setBeritaList([]);
             } finally {
                 setLoading(false);
             }
@@ -33,7 +36,7 @@ const BeritaSemasaPage: React.FC = () => {
                 <div className="mt-5 mb-5 p-3 border">
                     {loading ? (
                         <p>Memuat berita...</p>
-                    ) : (
+                    ) : beritaList.length > 0 ? (
                         <table id="beritaSemasa" className="table table-striped" style={{ width: '100%' }}>
                             <thead>
                                 <tr>
@@ -54,6 +57,8 @@ const BeritaSemasaPage: React.FC = () => {
                                 ))}
                             </tbody>
                         </table>
+                    ) : (
+                        <p>Tiada berita buat masa ini.</p>
                     )}
                 </div>
             </div>

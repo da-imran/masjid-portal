@@ -10,9 +10,12 @@ const PengumumanPage: React.FC = () => {
         const fetchPengumuman = async () => {
             try {
                 const response = await api.get<Announcement[]>('/api/pengumuman');
-                setPengumumanList(response.data);
+                // Ensure response.data is an array
+                const data = Array.isArray(response.data) ? response.data : [];
+                setPengumumanList(data);
             } catch (err) {
                 console.error('Failed to fetch pengumuman:', err);
+                setPengumumanList([]);
             } finally {
                 setLoading(false);
             }
@@ -33,7 +36,7 @@ const PengumumanPage: React.FC = () => {
                 <div className="mt-5 mb-5 p-3 border">
                     {loading ? (
                         <p>Memuat pengumuman...</p>
-                    ) : (
+                    ) : pengumumanList.length > 0 ? (
                         <table className="table table-striped" style={{ width: '100%' }}>
                             <thead>
                                 <tr>
@@ -52,6 +55,8 @@ const PengumumanPage: React.FC = () => {
                                 ))}
                             </tbody>
                         </table>
+                    ) : (
+                        <p>Tiada pengumuman buat masa ini.</p>
                     )}
                 </div>
             </div>

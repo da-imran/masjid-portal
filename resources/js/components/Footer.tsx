@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import api from '@/lib/api';
 import type { VisitorCount } from '@/types';
 
+const ADMIN_URL = import.meta.env.VITE_ADMIN_URL || '/admin';
+
 const Footer: React.FC = () => {
     const [visitorCount, setVisitorCount] = useState<VisitorCount | null>(null);
 
@@ -17,6 +19,10 @@ const Footer: React.FC = () => {
 
         fetchVisitorCount();
     }, []);
+
+    const handleAdminRedirect = () => {
+        window.location.href = ADMIN_URL;
+    };
 
     return (
         <div className="footer mt-auto">
@@ -44,6 +50,22 @@ const Footer: React.FC = () => {
                             <a href="#" className="text" title="Dasar Privasi">Dasar Privasi</a> <br />
                             <a href="https://infaqpay.my/go/masjidalmustaghfirinsungaitiram" className="text" title="Jom Infaq">Jom Infaq</a> <br />
                             <a href="https://www.facebook.com/MasjidAlMustaghfirinSungaiTiram" className="text" title="Laman Facebook">Laman Facebook</a> <br />
+                            <button
+                                onClick={handleAdminRedirect}
+                                className="text"
+                                title="Laman Staf"
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    color: 'white',
+                                    padding: 0,
+                                    cursor: 'pointer',
+                                    textDecoration: 'none',
+                                    font: 'inherit',
+                                }}
+                            >
+                                Laman Staf
+                            </button> <br />
                         </div>
                     </div>
                     <div className="col-6 col-md-4 mt-3 mb-3">
@@ -69,6 +91,9 @@ const Footer: React.FC = () => {
                     text-decoration: none;
                 }
                 .footer a.text:hover {
+                    text-decoration: underline;
+                }
+                .footer button.text:hover {
                     text-decoration: underline;
                 }
             `}</style>

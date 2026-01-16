@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '@/lib/api';
 import type { NewsItem, Announcement } from '@/types';
 
@@ -137,7 +138,7 @@ const HomePage: React.FC = () => {
                                                         <h5 className="fs-6 fs-md-5 mb-1">{ls.title_ms}</h5>
                                                         <p className="d-none d-md-block mb-2 small">{truncateText(stripHtml(ls.content_ms || ls.description_ms), 150)}</p>
                                                         <p className="d-md-none mb-2 small">{truncateText(stripHtml(ls.content_ms || ls.description_ms), 80)}</p>
-                                                        <a href={`/information/berita/${ls.id}`} className="btn btn-sm btn-outline-primary">Baca Selanjutnya</a>
+                                                        <Link to={`/information/berita/${ls.id}`} className="btn btn-sm btn-outline-primary">Baca Selanjutnya</Link>
                                                     </div>
                                                 </div>
                                             ))}
@@ -191,7 +192,7 @@ const HomePage: React.FC = () => {
                                                         <h5 className="fs-6 fs-md-5 mb-1">{ls.title_ms}</h5>
                                                         <p className="d-none d-md-block mb-2 small">{truncateText(stripHtml(ls.content_ms || ls.description_ms), 150)}</p>
                                                         <p className="d-md-none mb-2 small">{truncateText(stripHtml(ls.content_ms || ls.description_ms), 80)}</p>
-                                                        <a href={`/information/pengumuman/${ls.id}`} className="btn btn-sm btn-outline-primary">Baca Selanjutnya</a>
+                                                        <Link to={`/information/pengumuman/${ls.id}`} className="btn btn-sm btn-outline-primary">Baca Selanjutnya</Link>
                                                     </div>
                                                 </div>
                                             ))}

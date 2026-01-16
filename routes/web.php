@@ -61,6 +61,9 @@ Route::prefix('api')->group(function () {
     });
 });
 
+// Admin Panel
+Route::view('/admin', 'admin');
+
 // SPA Fallback - Serve the React app for all non-API routes
 Route::get('/{any?}', function () {
     return view('layouts.app');

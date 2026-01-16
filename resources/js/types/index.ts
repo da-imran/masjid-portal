@@ -1,11 +1,5 @@
 // Common types for the application
 
-export interface ApiResponse<T> {
-    data: T;
-    message?: string;
-    status: number;
-}
-
 export interface PrayerTimes {
     fajr: string;
     syuruk: string;
@@ -70,14 +64,24 @@ export interface VisitorCount {
     overallCount: number;
 }
 
-export interface ContactForm {
-    name: string;
-    email: string;
-    subject: string;
-    message: string;
-}
-
 export interface MaintenanceStatus {
     maintenance: boolean;
     message: string | null;
+}
+
+export interface DownloadItem {
+    id: number;
+    title_ms: string;
+    title_en?: string;
+    description_ms?: string;
+    description_en?: string;
+    category: 'jadual_kuliah' | 'nota_kuliah' | 'borang';
+    file_name: string;
+    file_path: string;
+    file_size?: number;
+    file_type?: string;
+    download_count: number;
+    is_active?: boolean;
+    created_at: string;
+    updated_at: string;
 }

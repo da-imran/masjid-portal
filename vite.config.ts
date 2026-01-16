@@ -7,7 +7,7 @@ export default defineConfig({
     plugins: [
         react(),
         laravel({
-            input: ['resources/js/main.tsx'],
+            input: ['resources/js/main.tsx', 'resources/js/admin/main.tsx'],
             publicDirectory: 'public',
             buildDirectory: 'build',
             refresh: true,
