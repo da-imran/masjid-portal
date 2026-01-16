@@ -1,0 +1,46 @@
+{
+  "name": "mustaghfirin-app",
+  "version": "1.0.0",
+  "description": "React project for Masjid Al-Mustaghfirin app",
+  "homepage": "https://github.com/da-imran/masjid-portal#readme",
+  "bugs": {
+    "url": "https://github.com/da-imran/masjid-portal/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/da-imran/masjid-portal.git"
+  },
+  "license": "ISC",
+  "author": "Muhammad Ehsan Imran",
+  "type": "module",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "start": "npm run dev",
+    "test": "vitest",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.8",
+    "@vitejs/plugin-react": "^5.1.2",
+    "laravel-vite-plugin": "^2.0.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "@types/react": "^19.2.8",
+    "@types/react-dom": "^19.2.3",
+    "axios": "^1.13.2",
+    "bootstrap": "^5.3.8",
+    "react-router-dom": "^7.12.0"
+  }
+}

@@ -18,6 +18,13 @@ class KutipanMasjid extends Model
     protected $table = 'kutipan_masjid';
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = ['day_name_ms', 'month_name_ms'];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
