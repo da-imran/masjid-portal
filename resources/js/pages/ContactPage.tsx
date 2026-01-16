@@ -8,10 +8,11 @@ const ContactPage: React.FC = () => {
                 <div className="row">
                     <div className="col-md-6">
                         <p className="fs-4 mb-1">Alamat</p>
-                        <p className="fs-6">Masjid Al Mustaghfirin, Bayan Lepas</p>
-                        <p className="fs-6">Jalan Sultan Azlan Shah, Kampung Sungai Tiram,</p>
-                        <p className="fs-6">11900 Bayan Lepas,</p>
-                        <p className="fs-6">Pulau Pinang</p>
+                        <p className="fs-6">Masjid Al Mustaghfirin, Bayan Lepas <br/> 
+                            Jalan Sultan Azlan Shah, Kampung Sungai Tiram, <br/>
+                            11900 Bayan Lepas,<br/>
+                            Pulau Pinang<br/>
+                        </p>
                         <div className="mt-3">
                             <p className="fs-4 mb-1">Telefon</p>
                             <p className="fs-6">+6019-320-0799</p>

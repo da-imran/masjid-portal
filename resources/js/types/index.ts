@@ -76,3 +76,8 @@ export interface ContactForm {
     subject: string;
     message: string;
 }
+
+export interface MaintenanceStatus {
+    maintenance: boolean;
+    message: string | null;
+}

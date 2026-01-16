@@ -48,10 +48,11 @@ const Footer: React.FC = () => {
                     </div>
                     <div className="col-6 col-md-4 mt-3 mb-3">
                         <div><h1 style={{ fontSize: '25px' }}><b>Alamat</b></h1></div>
-                        <p>Masjid Al Mustaghfirin, Bayan Lepas</p>
-                        <p>Jalan Sultan Azlan Shah, Kampung Sungai Tiram,</p>
-                        <p>11900 Bayan Lepas,</p>
-                        <p>Pulau Pinang</p>
+                        <p>Masjid Al Mustaghfirin, Bayan Lepas <br/> 
+                            Jalan Sultan Azlan Shah, Kampung Sungai Tiram, <br/>
+                            11900 Bayan Lepas,<br/>
+                            Pulau Pinang<br/>
+                        </p>
                         <p className="font-italic">Telefon: +019-320-0799</p>
                     </div>
                 </div>

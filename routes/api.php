@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\CorporateInfoController;
 use App\Http\Controllers\Api\V1\KutipanMasjidController;
 use App\Http\Controllers\Api\V1\PengumumanController;
 use App\Http\Controllers\Api\V1\PrayerTimeController;
+use App\Http\Controllers\Api\V1\SystemController;
 use App\Http\Controllers\Api\V1\VisitorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,13 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+/*
+|--------------------------------------------------------------------------
+| Public System Routes (No authentication required)
+|--------------------------------------------------------------------------
+*/
+Route::get('/maintenance', [SystemController::class, 'maintenanceStatus']);
 
 // Sanctum authenticated user route
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
