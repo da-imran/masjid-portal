@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Takwim extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $table = 'takwim';
 
@@ -24,6 +23,7 @@ class Takwim extends Model
         'location_en',
         'image_name',
         'is_active',
+        'is_deleted',
         'created_by',
         'updated_by',
     ];
@@ -32,6 +32,7 @@ class Takwim extends Model
         'event_date' => 'date',
         'event_time' => 'datetime:H:i:s',
         'is_active' => 'boolean',
+        'is_deleted' => 'boolean',
     ];
 
     /**

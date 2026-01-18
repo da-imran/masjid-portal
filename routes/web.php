@@ -64,7 +64,7 @@ Route::prefix('api')->group(function () {
 // Admin Panel
 Route::view('/admin', 'admin');
 
-// SPA Fallback - Serve the React app for all non-API routes
+// SPA Fallback - Serve the React app for all other routes
 Route::get('/{any?}', function () {
     return view('layouts.app');
-})->where('any', '.*');
+})->where('any', '(?!api/|admin|storage|images).*');

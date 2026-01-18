@@ -3,14 +3,30 @@ import {
     Datagrid,
     TextField,
     BooleanField,
+    DateField,
     EditButton,
     ShowButton,
-    useTranslate,
+    DeleteButton,
+    useGetIdentity,
+    useNotify,
+    useRefresh,
 } from 'react-admin';
-import { Chip } from '@mui/material';
 
 export const RoleList = () => {
-    const translate = useTranslate();
+    const { data: identity } = useGetIdentity();
+    const isAdmin = identity?.role === 'admin';
+    const notify = useNotify();
+    const refresh = useRefresh();
+
+    const handleDeleteSuccess = () => {
+        notify('Data telah dipadam', { type: 'success' });
+        refresh();
+    };
+
+    // Only allow admin to access this page
+    if (!isAdmin) {
+        return null;
+    }
 
     return (
         <List>
@@ -20,8 +36,14 @@ export const RoleList = () => {
                 <TextField source="slug" label="Slug" />
                 <TextField source="description" label="Description" />
                 <BooleanField source="is_default" label="Default" />
+                <DateField source="created_at" label="Created At" showTime />
+                <DateField source="updated_at" label="Updated At" showTime />
                 <EditButton />
                 <ShowButton />
+                <DeleteButton
+                    label="Padam"
+                    mutationOptions={{ onSuccess: handleDeleteSuccess }}
+                />
             </Datagrid>
         </List>
     );

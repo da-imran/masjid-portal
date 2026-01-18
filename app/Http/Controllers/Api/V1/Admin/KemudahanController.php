@@ -147,15 +147,17 @@ class KemudahanController extends Controller
     }
 
     /**
-     * Remove the specified kemudahan.
+     * Remove the specified kemudahan (soft delete - set is_deleted to true).
      */
     public function destroy(int $id): JsonResponse
     {
         $kemudahan = Kemudahan::findOrFail($id);
-        $kemudahan->delete();
+        $kemudahan->is_deleted = true;
+        $kemudahan->save();
 
         return response()->json([
             'message' => 'Kemudahan deleted successfully',
+            'data' => $kemudahan->load(['creator:id,name', 'updater:id,name']),
         ], 200);
     }
 }

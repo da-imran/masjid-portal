@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     Show,
     SimpleShowLayout,
@@ -8,14 +7,32 @@ import {
     DateField,
     ReferenceField,
     useGetIdentity,
+    useRedirect,
+    TopToolbar,
 } from 'react-admin';
+import { Button } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
+const BeritaShowActions = () => {
+    const redirect = useRedirect();
+    return (
+        <TopToolbar>
+            <Button
+                startIcon={<ArrowBackIcon />}
+                onClick={() => redirect('list', 'berita')}
+            >
+                Back
+            </Button>
+        </TopToolbar>
+    );
+};
 
 export const BeritaShow = () => {
     const { data: identity } = useGetIdentity();
     const isAdmin = identity?.role === 'admin';
 
     return (
-        <Show>
+        <Show actions={<BeritaShowActions />}>
             <SimpleShowLayout>
                 <TextField source="id" />
                 <TextField source="title_ms" label="Title (Malay)" />

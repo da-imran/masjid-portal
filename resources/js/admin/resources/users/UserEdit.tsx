@@ -10,6 +10,7 @@ import {
     Toolbar,
     SaveButton,
     useRedirect,
+    FormDataConsumer,
 } from 'react-admin';
 import { Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -36,7 +37,7 @@ export const UserEdit = () => {
     const isAdmin = identity?.role === 'admin';
 
     return (
-        <Edit title="Edit User #%{id}">
+        <Edit>
             <SimpleForm toolbar={<CustomEditToolbar />}>
                 <TextInput source="name" fullWidth />
                 <TextInput source="email" type="email" fullWidth />
@@ -46,8 +47,25 @@ export const UserEdit = () => {
                         <SelectInput optionText="name" fullWidth />
                     </ReferenceInput>
                 )}
+                <BooleanInput source="is_active" label="Aktif" />
                 {isAdmin && (
-                    <BooleanInput source="is_blocked" label="Blocked" />
+                    <>
+                        <BooleanInput source="is_blocked" label="Disekat" />
+                        <FormDataConsumer>
+                            {({ formData }) =>
+                                formData?.is_blocked && (
+                                    <TextInput
+                                        source="blocked_reason"
+                                        label="Alasan Disekat"
+                                        multiline
+                                        rows={3}
+                                        fullWidth
+                                        helperText="Sila nyatakan sebab pengguna ini disekat"
+                                    />
+                                )
+                            }
+                        </FormDataConsumer>
+                    </>
                 )}
             </SimpleForm>
         </Edit>

@@ -23,13 +23,14 @@ function App() {
             layout={(props) => <Layout {...props} appBar={CustomAppBar} />}
             requireAuth
         >
-            <Resource name="roles" list={RoleList} edit={RoleEdit} create={RoleCreate} show={RoleShow} />
+            <Resource name="roles" list={RoleList} edit={RoleEdit} create={RoleCreate} show={RoleShow} options={{ label: 'Jenis Pengguna' }} />
             <Resource
                 name="users"
                 list={UserList}
                 edit={UserEdit}
                 create={UserCreate}
                 show={UserShow}
+                options={{ label: 'Pengguna' }}
             />
             <Resource
                 name="berita"
@@ -37,6 +38,7 @@ function App() {
                 edit={BeritaEdit}
                 create={BeritaCreate}
                 show={BeritaShow}
+                options={{ label: 'Berita' }}
             />
             <Resource
                 name="kemudahan"
@@ -44,6 +46,7 @@ function App() {
                 edit={KemudahanEdit}
                 create={KemudahanCreate}
                 show={KemudahanShow}
+                options={{ label: 'Kemudahan' }}
             />
             <Resource
                 name="takwim"
@@ -51,6 +54,7 @@ function App() {
                 edit={TakwimEdit}
                 create={TakwimCreate}
                 show={TakwimShow}
+                options={{ label: 'Pengumuman' }}
             />
         </Admin>
     );

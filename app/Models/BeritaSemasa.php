@@ -4,12 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BeritaSemasa extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     /**
      * The table associated with the model.
@@ -33,6 +32,7 @@ class BeritaSemasa extends Model
         'content_en',
         'view_count',
         'is_active',
+        'is_deleted',
         'is_featured',
         'published_at',
         'created_by',
@@ -47,11 +47,11 @@ class BeritaSemasa extends Model
     protected $casts = [
         'view_count' => 'integer',
         'is_active' => 'boolean',
+        'is_deleted' => 'boolean',
         'is_featured' => 'boolean',
         'published_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
     ];
 
     /**

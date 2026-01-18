@@ -8,14 +8,32 @@ import {
     DateField,
     ReferenceField,
     useGetIdentity,
+    useRedirect,
+    TopToolbar,
 } from 'react-admin';
+import { Button } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
+const KemudahanShowActions = () => {
+    const redirect = useRedirect();
+    return (
+        <TopToolbar>
+            <Button
+                startIcon={<ArrowBackIcon />}
+                onClick={() => redirect('list', 'kemudahan')}
+            >
+                Back
+            </Button>
+        </TopToolbar>
+    );
+};
 
 export const KemudahanShow = () => {
     const { data: identity } = useGetIdentity();
     const isAdmin = identity?.role === 'admin';
 
     return (
-        <Show>
+        <Show actions={<KemudahanShowActions />}>
             <SimpleShowLayout>
                 <TextField source="id" />
                 <TextField source="title_ms" label="Title (Malay)" />

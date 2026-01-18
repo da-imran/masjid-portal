@@ -8,6 +8,7 @@ import {
     Toolbar,
     SaveButton,
     useRedirect,
+    useNotify,
 } from 'react-admin';
 import { Box, Typography, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -32,9 +33,19 @@ const CustomEditToolbar = () => {
 export const KemudahanEdit = () => {
     const { data: identity } = useGetIdentity();
     const isAdmin = identity?.role === 'admin';
+    const notify = useNotify();
+    const redirect = useRedirect();
+
+    const onSuccess = () => {
+        notify('Kemudahan telah dikemaskini', { type: 'success' });
+        redirect('list', 'kemudahan');
+    };
 
     return (
-        <Edit title="Edit Kemudahan #%{id}">
+        <Edit
+            title="Kemaskini Kemudahan #%{id}"
+            mutationOptions={{ onSuccess }}
+        >
             <SimpleForm toolbar={<CustomEditToolbar />}>
                 <Box display="flex" flexDirection="column" gap={2} width="100%">
                     <Typography variant="h6">Content</Typography>

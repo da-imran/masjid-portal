@@ -1,26 +1,22 @@
-import { AppBar, UserMenu, MenuItemLink, useTranslate, useLogout, useGetIdentity } from 'react-admin';
+import { AppBar, UserMenu, useTranslate, useLogout, useGetIdentity } from 'react-admin';
 import Typography from '@mui/material/Typography';
-import { Box } from '@mui/material';
+import { Box, MenuItem } from '@mui/material';
 import ExitIcon from '@mui/icons-material/ExitToApp';
 
 const CustomUserMenu = () => {
     const translate = useTranslate();
     const logout = useLogout();
-    const { data: identity, isLoading: identityLoading } = useGetIdentity();
+    const { isLoading: identityLoading } = useGetIdentity();
 
     return identityLoading ? null : (
         <UserMenu>
-            <MenuItemLink
-                to="/"
-                primaryText="Back to Site"
-                onClick={() => { window.location.href = '/'; }}
-            />
-            <MenuItemLink
-                to="/logout"
-                primaryText={translate('ra.auth.logout')}
-                onClick={logout}
-                leftIcon={<ExitIcon />}
-            />
+            <MenuItem onClick={() => { window.location.href = '/'; }}>
+                Back to Site
+            </MenuItem>
+            <MenuItem onClick={logout}>
+                <ExitIcon fontSize="small" sx={{ mr: 1 }} />
+                {translate('ra.auth.logout')}
+            </MenuItem>
         </UserMenu>
     );
 };

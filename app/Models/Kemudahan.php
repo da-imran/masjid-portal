@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Kemudahan extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $table = 'kemudahan';
 
@@ -22,12 +21,14 @@ class Kemudahan extends Model
         'image_name',
         'order_column',
         'is_active',
+        'is_deleted',
         'created_by',
         'updated_by',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_deleted' => 'boolean',
     ];
 
     /**

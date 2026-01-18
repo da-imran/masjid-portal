@@ -12,8 +12,9 @@ export const authProvider: AuthProvider = {
 
         try {
             const response = await fetch(request);
-            if (response.status < 200 || response.status >= 300) {
-                throw new Error(response.statusText);
+            if (response.status !== 200) {
+                const failedLogin = 'Failed to login';
+                throw new Error(failedLogin);
             }
             const auth = await response.json();
 
@@ -33,26 +34,36 @@ export const authProvider: AuthProvider = {
         const token = localStorage.getItem('token');
 
         if (token) {
-            const request = new Request(`${apiUrl}/logout`, {
-                method: 'POST',
-                headers: new Headers({
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                }),
-            });
+            try {
+                const request = new Request(`${apiUrl}/logout`, {
+                    method: 'POST',
+                    headers: new Headers({
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    }),
+                });
 
-            await fetch(request);
+                await fetch(request);
+            } catch (error) {
+                // Ignore logout API errors, just clear local storage
+                console.error('Logout API error:', error);
+            }
         }
 
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        // Return a resolved promise to redirect to login
         return Promise.resolve();
     },
 
     checkAuth: () => {
-        return localStorage.getItem('token')
-            ? Promise.resolve()
-            : Promise.reject();
+        const token = localStorage.getItem('token');
+        const user = localStorage.getItem('user');
+
+        if (token && user) {
+            return Promise.resolve();
+        }
+        return Promise.reject();
     },
 
     checkError: (error) => {

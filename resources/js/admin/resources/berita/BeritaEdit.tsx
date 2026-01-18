@@ -4,10 +4,13 @@ import {
     TextInput,
     BooleanInput,
     DateInput,
+    ImageInput,
+    ImageField,
     useGetIdentity,
     Toolbar,
     SaveButton,
     useRedirect,
+    useNotify,
 } from 'react-admin';
 import { Box, Typography, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -32,9 +35,19 @@ const CustomEditToolbar = () => {
 export const BeritaEdit = () => {
     const { data: identity } = useGetIdentity();
     const isAdmin = identity?.role === 'admin';
+    const notify = useNotify();
+    const redirect = useRedirect();
+
+    const onSuccess = () => {
+        notify('Berita telah dikemaskini', { type: 'success' });
+        redirect('list', 'berita');
+    };
 
     return (
-        <Edit title="Edit Berita #%{id}">
+        <Edit
+            title="Kemaskini Berita #%{id}"
+            mutationOptions={{ onSuccess }}
+        >
             <SimpleForm toolbar={<CustomEditToolbar />}>
                 <Box display="flex" flexDirection="column" gap={2} width="100%">
                     <Typography variant="h6">Content</Typography>
@@ -72,7 +85,14 @@ export const BeritaEdit = () => {
                         fullWidth
                     />
 
-                    <TextInput source="image_name" label="Image Name" fullWidth />
+                    <ImageInput
+                        source="image"
+                        label="Gambar Utama"
+                        accept={{ 'image/*': ['.png', '.jpg', '.jpeg', '.gif'] }}
+                        maxSize={5000000}
+                    >
+                        <ImageField source="src" title="title" />
+                    </ImageInput>
 
                     <Typography variant="h6" mt={2}>Settings</Typography>
 

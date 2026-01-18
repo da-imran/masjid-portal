@@ -155,15 +155,17 @@ class TakwimController extends Controller
     }
 
     /**
-     * Remove the specified takwim.
+     * Remove the specified takwim (soft delete - set is_deleted to true).
      */
     public function destroy(int $id): JsonResponse
     {
         $takwim = Takwim::findOrFail($id);
-        $takwim->delete();
+        $takwim->is_deleted = true;
+        $takwim->save();
 
         return response()->json([
             'message' => 'Takwim deleted successfully',
+            'data' => $takwim->load(['creator:id,name', 'updater:id,name']),
         ], 200);
     }
 }

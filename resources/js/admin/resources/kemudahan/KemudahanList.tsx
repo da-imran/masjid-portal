@@ -8,12 +8,22 @@ import {
     NumberField,
     EditButton,
     ShowButton,
+    DeleteButton,
     useGetIdentity,
+    useNotify,
+    useRefresh,
 } from 'react-admin';
 
 function KemudahanList() {
     const { data: identity } = useGetIdentity();
     const isAdmin = identity?.role === 'admin';
+    const notify = useNotify();
+    const refresh = useRefresh();
+
+    const handleDeleteSuccess = () => {
+        notify('Kemudahan telah dipadam', { type: 'success' });
+        refresh();
+    };
 
     return (
         <List sort={{ field: 'order_column', order: 'ASC' }}>
@@ -29,6 +39,10 @@ function KemudahanList() {
                 {isAdmin && <TextField source="updater.name" label="Updated By" />}
                 <EditButton />
                 <ShowButton />
+                <DeleteButton
+                    label="Padam"
+                    mutationOptions={{ onSuccess: handleDeleteSuccess }}
+                />
             </Datagrid>
         </List>
     );

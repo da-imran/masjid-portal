@@ -54,11 +54,6 @@ const HomePage: React.FC = () => {
         return chunks;
     };
 
-    const getImageUrl = (imageName?: string): string => {
-        if (imageName) return `/storage/${imageName}`;
-        return '/images/berita/default.jpg';
-    };
-
     return (
         <div className="top">
             {/* Image Carousel */}
@@ -111,7 +106,7 @@ const HomePage: React.FC = () => {
                         ) : beritaList.length > 0 ? (
                             <div id="carouselBerita" className="carousel slide" data-ride="carousel" data-bs-ride="carousel" style={{ margin: '15px 0px', maxWidth: '100%', height: 'auto' }}>
                                 <ol className="carousel-indicators d-none d-md-block">
-                                    {chunkArray(beritaList, 2).map((_, index) => (
+                                    {chunkArray(beritaList, 3).map((_, index) => (
                                         <li
                                             key={index}
                                             data-bs-target="#carouselBerita"
@@ -122,26 +117,18 @@ const HomePage: React.FC = () => {
                                     ))}
                                 </ol>
                                 <div className="carousel-inner">
-                                    {chunkArray(beritaList, 2).map((beritaRow, index) => (
+                                    {chunkArray(beritaList, 3).map((beritaRow, index) => (
                                         <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                                            {Array.isArray(beritaRow) && beritaRow.map((ls) => (
-                                                <div key={ls.id} className="row mb-3 align-items-center">
-                                                    <div className="col-4 col-md-3">
-                                                        <img
-                                                            className="d-block w-100 img-fluid"
-                                                            src={getImageUrl(ls.image_name)}
-                                                            alt={ls.title_ms}
-                                                            style={{ maxHeight: '80px', maxWidth: '80px', objectFit: 'cover' }}
-                                                        />
-                                                    </div>
-                                                    <div className="col-8 col-md-9 media-body">
-                                                        <h5 className="fs-6 fs-md-5 mb-1">{ls.title_ms}</h5>
-                                                        <p className="d-none d-md-block mb-2 small">{truncateText(stripHtml(ls.content_ms || ls.description_ms), 150)}</p>
-                                                        <p className="d-md-none mb-2 small">{truncateText(stripHtml(ls.content_ms || ls.description_ms), 80)}</p>
+                                            <div className="list-group">
+                                                {Array.isArray(beritaRow) && beritaRow.map((ls, idx) => (
+                                                    <div key={ls.id} className={`list-group-item ${idx < beritaRow.length - 1 ? 'border-bottom' : ''} border-0 px-0`}>
+                                                        <h5 className="fs-6 fs-md-5 mb-2">{ls.title_ms}</h5>
+                                                        <p className="d-none d-md-block mb-2 small text-muted">{truncateText(stripHtml(ls.content_ms || ls.description_ms), 180)}</p>
+                                                        <p className="d-md-none mb-2 small text-muted">{truncateText(stripHtml(ls.content_ms || ls.description_ms), 100)}</p>
                                                         <Link to={`/information/berita/${ls.id}`} className="btn btn-sm btn-outline-primary">Baca Selanjutnya</Link>
                                                     </div>
-                                                </div>
-                                            ))}
+                                                ))}
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
@@ -165,7 +152,7 @@ const HomePage: React.FC = () => {
                         ) : pengumumanList.length > 0 ? (
                             <div id="carouselPengumuman" className="carousel slide" data-ride="carousel" data-bs-ride="carousel" style={{ margin: '15px 0px', maxWidth: '100%', height: 'auto' }}>
                                 <ol className="carousel-indicators d-none d-md-block">
-                                    {chunkArray(pengumumanList, 2).map((_, index) => (
+                                    {chunkArray(pengumumanList, 3).map((_, index) => (
                                         <li
                                             key={index}
                                             data-bs-target="#carouselPengumuman"
@@ -176,26 +163,18 @@ const HomePage: React.FC = () => {
                                     ))}
                                 </ol>
                                 <div className="carousel-inner">
-                                    {chunkArray(pengumumanList, 2).map((pengumumanRow, index) => (
+                                    {chunkArray(pengumumanList, 3).map((pengumumanRow, index) => (
                                         <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                                            {Array.isArray(pengumumanRow) && pengumumanRow.map((ls) => (
-                                                <div key={ls.id} className="row mb-3 align-items-center">
-                                                    <div className="col-4 col-md-3">
-                                                        <img
-                                                            className="d-block w-100 img-fluid"
-                                                            src={getImageUrl(ls.image_name)}
-                                                            alt={ls.title_ms}
-                                                            style={{ maxHeight: '80px', maxWidth: '80px', objectFit: 'cover' }}
-                                                        />
-                                                    </div>
-                                                    <div className="col-8 col-md-9 media-body">
-                                                        <h5 className="fs-6 fs-md-5 mb-1">{ls.title_ms}</h5>
-                                                        <p className="d-none d-md-block mb-2 small">{truncateText(stripHtml(ls.content_ms || ls.description_ms), 150)}</p>
-                                                        <p className="d-md-none mb-2 small">{truncateText(stripHtml(ls.content_ms || ls.description_ms), 80)}</p>
+                                            <div className="list-group">
+                                                {Array.isArray(pengumumanRow) && pengumumanRow.map((ls, idx) => (
+                                                    <div key={ls.id} className={`list-group-item ${idx < pengumumanRow.length - 1 ? 'border-bottom' : ''} border-0 px-0`}>
+                                                        <h5 className="fs-6 fs-md-5 mb-2">{ls.title_ms}</h5>
+                                                        <p className="d-none d-md-block mb-2 small text-muted">{truncateText(stripHtml(ls.content_ms || ls.description_ms), 180)}</p>
+                                                        <p className="d-md-none mb-2 small text-muted">{truncateText(stripHtml(ls.content_ms || ls.description_ms), 100)}</p>
                                                         <Link to={`/information/pengumuman/${ls.id}`} className="btn btn-sm btn-outline-primary">Baca Selanjutnya</Link>
                                                     </div>
-                                                </div>
-                                            ))}
+                                                ))}
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
@@ -221,9 +200,13 @@ const HomePage: React.FC = () => {
                 .section-title-responsive {
                     font-size: 18px;
                 }
-                .img-content {
-                    max-height: 80px;
-                    max-width: 80px;
+                .list-group-item {
+                    background-color: transparent;
+                    border: none;
+                    padding: 0.75rem 0;
+                }
+                .list-group-item.border-bottom {
+                    border-bottom: 1px solid #dee2e6 !important;
                 }
                 @media (min-width: 576px) {
                     .section-title-responsive {

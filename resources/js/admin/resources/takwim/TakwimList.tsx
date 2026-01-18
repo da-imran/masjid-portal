@@ -7,12 +7,22 @@ import {
     DateField,
     EditButton,
     ShowButton,
+    DeleteButton,
     useGetIdentity,
+    useNotify,
+    useRefresh,
 } from 'react-admin';
 
 function TakwimList() {
     const { data: identity } = useGetIdentity();
     const isAdmin = identity?.role === 'admin';
+    const notify = useNotify();
+    const refresh = useRefresh();
+
+    const handleDeleteSuccess = () => {
+        notify('Acara telah dipadam', { type: 'success' });
+        refresh();
+    };
 
     return (
         <List sort={{ field: 'event_date', order: 'ASC' }}>
@@ -29,6 +39,10 @@ function TakwimList() {
                 {isAdmin && <TextField source="updater.name" label="Updated By" />}
                 <EditButton />
                 <ShowButton />
+                <DeleteButton
+                    label="Padam"
+                    mutationOptions={{ onSuccess: handleDeleteSuccess }}
+                />
             </Datagrid>
         </List>
     );

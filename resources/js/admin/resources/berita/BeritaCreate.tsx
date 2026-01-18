@@ -4,9 +4,12 @@ import {
     TextInput,
     BooleanInput,
     DateInput,
+    ImageInput,
+    ImageField,
     Toolbar,
     SaveButton,
     useRedirect,
+    useNotify,
 } from 'react-admin';
 import { Box, Typography, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -29,8 +32,19 @@ const CustomCreateToolbar = () => {
 };
 
 export const BeritaCreate = () => {
+    const notify = useNotify();
+    const redirect = useRedirect();
+
+    const onSuccess = () => {
+        notify('Berita telah ditambah', { type: 'success' });
+        redirect('list', 'berita');
+    };
+
     return (
-        <Create title="Create Berita">
+        <Create
+            title="Cipta Berita"
+            mutationOptions={{ onSuccess }}
+        >
             <SimpleForm toolbar={<CustomCreateToolbar />}>
                 <Box display="flex" flexDirection="column" gap={2} width="100%">
                     <Typography variant="h6">Content</Typography>
@@ -68,7 +82,14 @@ export const BeritaCreate = () => {
                         fullWidth
                     />
 
-                    <TextInput source="image_name" label="Image Name" fullWidth />
+                    <ImageInput
+                        source="image"
+                        label="Gambar Utama"
+                        accept={{ 'image/*': ['.png', '.jpg', '.jpeg', '.gif'] }}
+                        maxSize={5000000}
+                    >
+                        <ImageField source="src" title="title" />
+                    </ImageInput>
 
                     <Typography variant="h6" mt={2}>Settings</Typography>
 

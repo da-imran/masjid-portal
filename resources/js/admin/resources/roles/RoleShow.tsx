@@ -4,27 +4,38 @@ import {
     TextField,
     BooleanField,
     DateField,
-    useShowController,
+    useGetIdentity,
+    useRedirect,
+    TopToolbar,
 } from 'react-admin';
-import { Box, Typography, Chip } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Button } from '@mui/material';
-import { useRedirect } from 'react-admin';
+
+const RoleShowActions = () => {
+    const redirect = useRedirect();
+    return (
+        <TopToolbar>
+            <Button
+                startIcon={<ArrowBackIcon />}
+                onClick={() => redirect('list', 'roles')}
+            >
+                Back
+            </Button>
+        </TopToolbar>
+    );
+};
 
 export const RoleShow = () => {
-    const redirect = useRedirect();
+    const { data: identity } = useGetIdentity();
+    const isAdmin = identity?.role === 'admin';
+
+    // Only allow admin to access this page
+    if (!isAdmin) {
+        return null;
+    }
 
     return (
-        <Show>
-            <Box display="flex" alignItems="center" mb={2}>
-                <Button
-                    startIcon={<ArrowBackIcon />}
-                    onClick={() => redirect('list', 'roles')}
-                    sx={{ marginRight: 2 }}
-                >
-                    Back to List
-                </Button>
-            </Box>
+        <Show actions={<RoleShowActions />}>
             <SimpleShowLayout>
                 <TextField source="id" label="ID" />
                 <TextField source="name" label="Name" />

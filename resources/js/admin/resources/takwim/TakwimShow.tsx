@@ -7,14 +7,32 @@ import {
     DateField,
     ReferenceField,
     useGetIdentity,
+    useRedirect,
+    TopToolbar,
 } from 'react-admin';
+import { Button } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
+const TakwimShowActions = () => {
+    const redirect = useRedirect();
+    return (
+        <TopToolbar>
+            <Button
+                startIcon={<ArrowBackIcon />}
+                onClick={() => redirect('list', 'takwim')}
+            >
+                Back
+            </Button>
+        </TopToolbar>
+    );
+};
 
 export const TakwimShow = () => {
     const { data: identity } = useGetIdentity();
     const isAdmin = identity?.role === 'admin';
 
     return (
-        <Show>
+        <Show actions={<TakwimShowActions />}>
             <SimpleShowLayout>
                 <TextField source="id" />
                 <TextField source="title_ms" label="Title (Malay)" />

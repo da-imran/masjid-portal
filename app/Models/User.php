@@ -24,6 +24,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'is_active',
+        'is_deleted',
         'is_blocked',
         'blocked_at',
         'blocked_reason',
@@ -47,6 +49,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_active' => 'boolean',
+        'is_deleted' => 'boolean',
         'is_blocked' => 'boolean',
         'blocked_at' => 'datetime',
     ];

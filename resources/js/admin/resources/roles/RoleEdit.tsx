@@ -6,6 +6,8 @@ import {
     Toolbar,
     SaveButton,
     useRedirect,
+    useGetIdentity,
+    useNotify,
 } from 'react-admin';
 import { Box, Typography, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -28,8 +30,26 @@ const CustomEditToolbar = () => {
 };
 
 export const RoleEdit = () => {
+    const { data: identity } = useGetIdentity();
+    const isAdmin = identity?.role === 'admin';
+    const notify = useNotify();
+    const redirect = useRedirect();
+
+    const onSuccess = () => {
+        notify('Data telah dikemaskini', { type: 'success' });
+        redirect('list', 'roles');
+    };
+
+    // Only allow admin to access this page
+    if (!isAdmin) {
+        return null;
+    }
+
     return (
-        <Edit title="Edit Role #%{id}">
+        <Edit
+            title="Kemaskini Jenis Pengguna #%{id}"
+            mutationOptions={{ onSuccess }}
+        >
             <SimpleForm toolbar={<CustomEditToolbar />}>
                 <Box display="flex" flexDirection="column" gap={2} width="100%">
                     <Typography variant="h6">Role Information</Typography>

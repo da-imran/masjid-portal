@@ -7,6 +7,7 @@ import {
     Toolbar,
     SaveButton,
     useRedirect,
+    useNotify,
 } from 'react-admin';
 import { Box, Typography, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -29,8 +30,19 @@ const CustomCreateToolbar = () => {
 };
 
 export const KemudahanCreate = () => {
+    const notify = useNotify();
+    const redirect = useRedirect();
+
+    const onSuccess = () => {
+        notify('Kemudahan telah ditambah', { type: 'success' });
+        redirect('list', 'kemudahan');
+    };
+
     return (
-        <Create title="Create Kemudahan">
+        <Create
+            title="Cipta Kemudahan"
+            mutationOptions={{ onSuccess }}
+        >
             <SimpleForm toolbar={<CustomCreateToolbar />}>
                 <Box display="flex" flexDirection="column" gap={2} width="100%">
                     <Typography variant="h6">Content</Typography>

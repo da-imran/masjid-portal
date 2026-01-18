@@ -7,6 +7,7 @@ import {
     Toolbar,
     SaveButton,
     useRedirect,
+    useNotify,
 } from 'react-admin';
 import { Box, Typography, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -29,8 +30,19 @@ const CustomCreateToolbar = () => {
 };
 
 export const TakwimCreate = () => {
+    const notify = useNotify();
+    const redirect = useRedirect();
+
+    const onSuccess = () => {
+        notify('Event created successfully', { type: 'success' });
+        redirect('list', 'takwim');
+    };
+
     return (
-        <Create title="Create Takwim">
+        <Create
+            title="Create Event"
+            mutationOptions={{ onSuccess }}
+        >
             <SimpleForm toolbar={<CustomCreateToolbar />}>
                 <Box display="flex" flexDirection="column" gap={2} width="100%">
                     <Typography variant="h6">Content</Typography>

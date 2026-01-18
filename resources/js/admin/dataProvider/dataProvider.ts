@@ -72,7 +72,8 @@ export const dataProvider: DataProvider = {
                 total: meta?.total || (Array.isArray(data) ? data.length : 0),
             };
         } catch (error: any) {
-            throw new Error(error.message || 'Failed to fetch data');
+            // Re-throw the error so react-admin can handle it via authProvider.checkError
+            throw error;
         }
     },
 
@@ -92,7 +93,7 @@ export const dataProvider: DataProvider = {
             const data = response.json?.data || response.json;
             return { data };
         } catch (error: any) {
-            throw new Error(error.message || 'Failed to fetch record');
+            throw error;
         }
     },
 
@@ -113,7 +114,7 @@ export const dataProvider: DataProvider = {
             const data = response.json?.data || response.json;
             return { data: Array.isArray(data) ? data : [] };
         } catch (error: any) {
-            throw new Error(error.message || 'Failed to fetch records');
+            throw error;
         }
     },
 
@@ -151,42 +152,152 @@ export const dataProvider: DataProvider = {
                 total: meta?.total || (Array.isArray(data) ? data.length : 0),
             };
         } catch (error: any) {
-            throw new Error(error.message || 'Failed to fetch data');
+            // Re-throw the error so react-admin can handle it via authProvider.checkError
+            throw error;
         }
     },
 
     create: async (resource: string, params: CreateParams) => {
         const url = `${apiUrl}/${resource}`;
+        const token = getToken();
+
+        // Check if params.data contains any File objects (image uploads)
+        const hasFile = Object.values(params.data).some(
+            value => value instanceof File || (value && typeof value === 'object' && 'rawFile' in value)
+        );
+
+        let body: string | FormData;
+        let headers: Headers;
+
+        if (hasFile) {
+            // Use FormData for file uploads
+            const formData = new FormData();
+            Object.entries(params.data).forEach(([key, value]) => {
+                if (value instanceof File) {
+                    formData.append(key, value);
+                } else if (value && typeof value === 'object' && 'rawFile' in value) {
+                    // React Admin ImageInput format
+                    formData.append(key, (value as any).rawFile);
+                } else if (value !== null && value !== undefined) {
+                    formData.append(key, String(value));
+                }
+            });
+            body = formData;
+            // Don't set Content-Type when using FormData - browser will set it with boundary
+            headers = new Headers({
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            });
+        } else {
+            headers = new Headers({
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            });
+            body = JSON.stringify(params.data);
+        }
 
         const options: RequestInit = {
             method: 'POST',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getToken()}`,
-            }),
-            body: JSON.stringify(params.data),
+            headers,
+            body,
         };
 
         try {
             const response = await fetchUtils.fetchJson(url, options);
+
+            // fetchUtils.fetchJson returns { status, headers, body, json }
+            const jsonData = response.json;
+
             // Handle both nested data format and direct data format
-            const data = response.json?.data || response.json;
+            const data = jsonData?.data || jsonData;
+
+            // Ensure data has an id property (required by react-admin)
+            if (!data || typeof data !== 'object' || !('id' in data)) {
+                throw new Error('Response data must contain an id field');
+            }
+
             return { data };
         } catch (error: any) {
-            throw new Error(error.message || 'Failed to create record');
+            // Handle fetchUtils errors which may have status and body properties
+            if (error.status) {
+                let errorMessages = error.message || 'Failed to create record';
+
+                if (error.body) {
+                    try {
+                        const errorBody = typeof error.body === 'string'
+                            ? JSON.parse(error.body)
+                            : error.body;
+
+                        // Laravel validation errors format
+                        if (errorBody.errors || errorBody.message) {
+                            const validationErrors = errorBody.errors
+                                ? Object.values(errorBody.errors).flat().join(', ')
+                                : errorBody.message;
+                            errorMessages = validationErrors;
+                        }
+                    } catch (e) {
+                        // If parsing fails, use original message
+                    }
+                }
+
+                // Create a new error with the enhanced message but keep original properties
+                const enhancedError = new Error(errorMessages) as any;
+                enhancedError.status = error.status;
+                enhancedError.body = error.body;
+                throw enhancedError;
+            }
+
+            throw error;
         }
     },
 
     update: async (resource: string, params: UpdateParams) => {
         const url = `${apiUrl}/${resource}/${params.id}`;
+        const token = getToken();
+
+        // Check if params.data contains any File objects (image uploads)
+        const hasFile = Object.values(params.data).some(
+            value => value instanceof File || (value && typeof value === 'object' && 'rawFile' in value)
+        );
+
+        let body: string | FormData;
+        let headers: Headers;
+
+        if (hasFile) {
+            // Use FormData for file uploads
+            const formData = new FormData();
+            // Use POST method with _method=PUT for file uploads in Laravel
+            formData.append('_method', 'PUT');
+            Object.entries(params.data).forEach(([key, value]) => {
+                if (value instanceof File) {
+                    formData.append(key, value);
+                } else if (value && typeof value === 'object' && 'rawFile' in value) {
+                    // React Admin ImageInput format
+                    formData.append(key, (value as any).rawFile);
+                } else if (value !== null && value !== undefined) {
+                    formData.append(key, String(value));
+                }
+            });
+            body = formData;
+            // Don't set Content-Type when using FormData
+            headers = new Headers({
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            });
+        } else {
+            headers = new Headers({
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            });
+            body = JSON.stringify(params.data);
+        }
 
         const options: RequestInit = {
-            method: 'PUT',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getToken()}`,
-            }),
-            body: JSON.stringify(params.data),
+            method: hasFile ? 'POST' : 'PUT',
+            headers,
+            body,
         };
 
         try {
@@ -195,7 +306,7 @@ export const dataProvider: DataProvider = {
             const data = response.json?.data || response.json;
             return { data };
         } catch (error: any) {
-            throw new Error(error.message || 'Failed to update record');
+            throw error;
         }
     },
 
@@ -215,7 +326,7 @@ export const dataProvider: DataProvider = {
             await fetchUtils.fetchJson(url, options);
             return { data: params.ids };
         } catch (error: any) {
-            throw new Error(error.message || 'Failed to update records');
+            throw error;
         }
     },
 
@@ -234,7 +345,7 @@ export const dataProvider: DataProvider = {
             await fetchUtils.fetchJson(url, options);
             return { data: { id: params.id } as any };
         } catch (error: any) {
-            throw new Error(error.message || 'Failed to delete record');
+            throw error;
         }
     },
 
@@ -254,7 +365,7 @@ export const dataProvider: DataProvider = {
             await fetchUtils.fetchJson(url, options);
             return { data: params.ids };
         } catch (error: any) {
-            throw new Error(error.message || 'Failed to delete records');
+            throw error;
         }
     },
 };

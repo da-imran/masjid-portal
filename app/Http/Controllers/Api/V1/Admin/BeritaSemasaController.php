@@ -67,7 +67,7 @@ class BeritaSemasaController extends Controller
             'description_en' => 'nullable|string',
             'content_ms' => 'required|string',
             'content_en' => 'nullable|string',
-            'image_name' => 'nullable|string|max:255',
+            'image' => 'nullable|image|max:5120', // Image upload, max 5MB
             'is_active' => 'nullable|boolean',
             'is_featured' => 'nullable|boolean',
             'published_at' => 'nullable|date',
@@ -77,6 +77,13 @@ class BeritaSemasaController extends Controller
             throw ValidationException::withMessages($validator->errors()->toArray());
         }
 
+        $imageName = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->storeAs('public/berita', $imageName);
+        }
+
         $berita = BeritaSemasa::create([
             'title_ms' => $request->title_ms,
             'title_en' => $request->title_en,
@@ -84,7 +91,7 @@ class BeritaSemasaController extends Controller
             'description_en' => $request->description_en,
             'content_ms' => $request->content_ms,
             'content_en' => $request->content_en,
-            'image_name' => $request->image_name,
+            'image_name' => $imageName,
             'is_active' => $request->has('is_active') ? $request->boolean('is_active') : true,
             'is_featured' => $request->has('is_featured') ? $request->boolean('is_featured') : false,
             'published_at' => $request->published_at ?? now(),
@@ -126,7 +133,7 @@ class BeritaSemasaController extends Controller
             'description_en' => 'nullable|string',
             'content_ms' => 'sometimes|required|string',
             'content_en' => 'nullable|string',
-            'image_name' => 'nullable|string|max:255',
+            'image' => 'nullable|image|max:5120', // Image upload, max 5MB
             'is_active' => 'nullable|boolean',
             'is_featured' => 'nullable|boolean',
             'published_at' => 'nullable|date',
@@ -144,10 +151,22 @@ class BeritaSemasaController extends Controller
         if ($request->has('description_en')) $updateData['description_en'] = $request->description_en;
         if ($request->has('content_ms')) $updateData['content_ms'] = $request->content_ms;
         if ($request->has('content_en')) $updateData['content_en'] = $request->content_en;
-        if ($request->has('image_name')) $updateData['image_name'] = $request->image_name;
         if ($request->has('is_active')) $updateData['is_active'] = $request->boolean('is_active');
         if ($request->has('is_featured')) $updateData['is_featured'] = $request->boolean('is_featured');
         if ($request->has('published_at')) $updateData['published_at'] = $request->published_at;
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($berita->image_name && Storage::exists('public/berita/' . $berita->image_name)) {
+                Storage::delete('public/berita/' . $berita->image_name);
+            }
+
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->storeAs('public/berita', $imageName);
+            $updateData['image_name'] = $imageName;
+        }
 
         $updateData['updated_by'] = auth()->id();
 
@@ -161,15 +180,17 @@ class BeritaSemasaController extends Controller
     }
 
     /**
-     * Remove the specified berita semasa.
+     * Remove the specified berita semasa (soft delete - set is_deleted to true).
      */
     public function destroy(int $id): JsonResponse
     {
         $berita = BeritaSemasa::findOrFail($id);
-        $berita->delete();
+        $berita->is_deleted = true;
+        $berita->save();
 
         return response()->json([
             'message' => 'Berita Semasa deleted successfully',
+            'data' => $berita->load(['creator:id,name', 'updater:id,name']),
         ], 200);
     }
 }

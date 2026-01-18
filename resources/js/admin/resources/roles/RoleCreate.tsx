@@ -6,6 +6,8 @@ import {
     Toolbar,
     SaveButton,
     useRedirect,
+    useGetIdentity,
+    useNotify,
     required,
 } from 'react-admin';
 import { Box, Typography, Button } from '@mui/material';
@@ -29,8 +31,26 @@ const CustomCreateToolbar = () => {
 };
 
 export const RoleCreate = () => {
+    const { data: identity } = useGetIdentity();
+    const isAdmin = identity?.role === 'admin';
+    const notify = useNotify();
+    const redirect = useRedirect();
+
+    const onSuccess = () => {
+        notify('Data telah ditambah', { type: 'success' });
+        redirect('list', 'roles');
+    };
+
+    // Only allow admin to access this page
+    if (!isAdmin) {
+        return null;
+    }
+
     return (
-        <Create title="Create Role">
+        <Create
+            title="Cipta Jenis Pengguna"
+            mutationOptions={{ onSuccess }}
+        >
             <SimpleForm toolbar={<CustomCreateToolbar />}>
                 <Box display="flex" flexDirection="column" gap={2} width="100%">
                     <Typography variant="h6">Role Information</Typography>

@@ -68,7 +68,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8',
             'role_id' => 'nullable|exists:roles,id',
         ]);
 
@@ -81,6 +81,7 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role_id' => $request->role_id,
+            'is_active' => false,
         ]);
 
         // Load role relationship
@@ -114,8 +115,11 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'sometimes|required|string|max:255',
             'email' => ['sometimes', 'required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => 'nullable|string|min:8',
             'role_id' => 'nullable|exists:roles,id',
+            'is_active' => 'nullable|boolean',
+            'is_blocked' => 'nullable|boolean',
+            'blocked_reason' => 'nullable|string|max:500',
         ]);
 
         if ($validator->fails()) {
@@ -135,6 +139,24 @@ class UserController extends Controller
             $updateData['role_id'] = $request->role_id;
         }
 
+        if ($request->has('is_active')) {
+            $updateData['is_active'] = $request->boolean('is_active');
+        }
+
+        if ($request->has('is_blocked')) {
+            $updateData['is_blocked'] = $request->boolean('is_blocked');
+            if ($request->boolean('is_blocked')) {
+                $updateData['blocked_at'] = now();
+            } else {
+                $updateData['blocked_at'] = null;
+                $updateData['blocked_reason'] = null;
+            }
+        }
+
+        if ($request->has('blocked_reason') && $request->boolean('is_blocked')) {
+            $updateData['blocked_reason'] = $request->blocked_reason;
+        }
+
         $user->update($updateData);
         $user->load('role');
 
@@ -145,7 +167,7 @@ class UserController extends Controller
     }
 
     /**
-     * Remove the specified user.
+     * Remove the specified user (soft delete - set is_deleted to true).
      */
     public function destroy(int $id): JsonResponse
     {
@@ -159,10 +181,13 @@ class UserController extends Controller
             ], 403);
         }
 
-        $user->delete();
+        // Soft delete - set is_deleted to true
+        $user->is_deleted = true;
+        $user->save();
 
         return response()->json([
             'message' => 'User deleted successfully',
+            'data' => $user->load('role'),
         ], 200);
     }
 

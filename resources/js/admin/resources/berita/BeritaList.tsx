@@ -7,12 +7,22 @@ import {
     DateField,
     EditButton,
     ShowButton,
+    DeleteButton,
     useGetIdentity,
+    useNotify,
+    useRefresh,
 } from 'react-admin';
 
 function BeritaList() {
     const { data: identity } = useGetIdentity();
     const isAdmin = identity?.role === 'admin';
+    const notify = useNotify();
+    const refresh = useRefresh();
+
+    const handleDeleteSuccess = () => {
+        notify('Berita telah dipadam', { type: 'success' });
+        refresh();
+    };
 
     return (
         <List sort={{ field: 'created_at', order: 'DESC' }}>
@@ -27,6 +37,10 @@ function BeritaList() {
                 {isAdmin && <TextField source="updater.name" label="Updated By" />}
                 <EditButton />
                 <ShowButton />
+                <DeleteButton
+                    label="Padam"
+                    mutationOptions={{ onSuccess: handleDeleteSuccess }}
+                />
             </Datagrid>
         </List>
     );
