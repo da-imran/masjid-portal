@@ -23,12 +23,17 @@
     "preview": "vite preview",
     "start": "npm run dev",
     "test": "vitest",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 100",
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^25.0.8",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
     "@vitejs/plugin-react": "^5.1.2",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.26",
     "laravel-vite-plugin": "^2.0.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",

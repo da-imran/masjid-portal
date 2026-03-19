@@ -2,13 +2,16 @@ import {
     Edit,
     SimpleForm,
     TextInput,
-    NumberInput,
     BooleanInput,
+    ImageInput,
+    ImageField,
+    FunctionField,
     useGetIdentity,
     Toolbar,
     SaveButton,
     useRedirect,
     useNotify,
+    useRefresh,
 } from 'react-admin';
 import { Box, Typography, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -32,11 +35,13 @@ const CustomEditToolbar = () => {
 
 export const KemudahanEdit = () => {
     const { data: identity } = useGetIdentity();
-    const isAdmin = identity?.role === 'admin';
+    const isAdmin = identity?.role?.toLowerCase() === 'admin';
     const notify = useNotify();
     const redirect = useRedirect();
+    const refresh = useRefresh();
 
     const onSuccess = () => {
+        refresh();
         notify('Kemudahan telah dikemaskini', { type: 'success' });
         redirect('list', 'kemudahan');
     };
@@ -68,22 +73,38 @@ export const KemudahanEdit = () => {
                         fullWidth
                     />
 
-                    <TextInput source="icon_name" label="Icon Name" fullWidth />
-                    <TextInput source="image_name" label="Image Name" fullWidth />
+                    <ImageInput
+                        source="image"
+                        label="Image"
+                        accept={{ 'image/*': ['.png', '.jpg', '.jpeg', '.gif', '.webp'] }}
+                        maxSize={5000000}
+                    >
+                        <ImageField source="src" title="title" />
+                    </ImageInput>
 
                     <Typography variant="h6" mt={2}>Settings</Typography>
 
-                    <NumberInput source="order_column" label="Order Column" fullWidth />
                     <BooleanInput source="is_active" label="Active" />
 
                     {isAdmin && (
-                        <Box mt={2} p={2} bgcolor="grey.100" borderRadius={1}>
-                            <Typography variant="subtitle2" color="textSecondary">
+                        <Box mt={2} p={2} sx={{ bgcolor: 'action.hover', borderRadius: 1 }}>
+                            <Typography variant="subtitle2" sx={{ color: 'text.primary', fontWeight: 600 }}>
                                 Audit Information
                             </Typography>
-                            <Typography variant="body2">
-                                Created By: <strong>{identity?.fullName || 'N/A'}</strong>
-                            </Typography>
+                            <FunctionField
+                                render={(record: any) => (
+                                    <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                                        Created By: <Box component="span" sx={{ fontWeight: 'bold' }}>{record?.creator?.name || 'N/A'}</Box>
+                                    </Typography>
+                                )}
+                            />
+                            <FunctionField
+                                render={(record: any) => (
+                                    <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                                        Updated By: <Box component="span" sx={{ fontWeight: 'bold' }}>{record?.updater?.name || 'N/A'}</Box>
+                                    </Typography>
+                                )}
+                            />
                         </Box>
                     )}
                 </Box>

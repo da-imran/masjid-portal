@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Admin;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -14,7 +14,7 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     /**
-     * Login admin user and return token with user data.
+     * Login user and return token with user data.
      */
     public function login(Request $request): JsonResponse
     {
@@ -24,6 +24,11 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
+            \Log::warning('Login validation failed', [
+                'errors' => $validator->errors()->toArray(),
+                'input' => $request->all(),
+            ]);
+
             return response()->json([
                 'error' => 'Validation failed',
                 'messages' => $validator->errors(),
@@ -40,6 +45,14 @@ class AuthController extends Controller
             ], 403);
         }
 
+        // Check if user is disabled
+        if ($user && !$user->is_active) {
+            return response()->json([
+                'error' => 'Account disabled',
+                'message' => 'Your account has been disabled.',
+            ], 403);
+        }
+
         // Attempt authentication
         if (!Auth::guard('web')->attempt($request->only('email', 'password'))) {
             throw ValidationException::withMessages([
@@ -50,7 +63,7 @@ class AuthController extends Controller
         $user = Auth::guard('web')->user();
 
         // Create API token
-        $token = $user->createToken('admin-token')->plainTextToken;
+        $token = $user->createToken('api-token')->plainTextToken;
 
         // Load role and permissions
         $user->load(['role', 'role.permissions']);
@@ -65,17 +78,16 @@ class AuthController extends Controller
                 'role' => $user->role ? [
                     'id' => $user->role->id,
                     'name' => $user->role->name,
-                    'slug' => $user->role->slug,
                 ] : null,
                 'permissions' => $user->role && $user->role->permissions
-                    ? $user->role->permissions->pluck('slug')->toArray()
+                    ? $user->role->permissions->pluck('name')->toArray()
                     : [],
             ],
         ], 200);
     }
 
     /**
-     * Logout admin user and revoke token.
+     * Logout user and revoke token.
      */
     public function logout(Request $request): JsonResponse
     {
@@ -105,10 +117,9 @@ class AuthController extends Controller
                 'role' => $user->role ? [
                     'id' => $user->role->id,
                     'name' => $user->role->name,
-                    'slug' => $user->role->slug,
                 ] : null,
                 'permissions' => $user->role && $user->role->permissions
-                    ? $user->role->permissions->pluck('slug')->toArray()
+                    ? $user->role->permissions->pluck('name')->toArray()
                     : [],
             ],
         ], 200);
@@ -125,7 +136,7 @@ class AuthController extends Controller
         $user->currentAccessToken()->delete();
 
         // Create new token
-        $token = $user->createToken('admin-token')->plainTextToken;
+        $token = $user->createToken('api-token')->plainTextToken;
 
         // Load role and permissions
         $user->load(['role', 'role.permissions']);
@@ -140,10 +151,9 @@ class AuthController extends Controller
                 'role' => $user->role ? [
                     'id' => $user->role->id,
                     'name' => $user->role->name,
-                    'slug' => $user->role->slug,
                 ] : null,
                 'permissions' => $user->role && $user->role->permissions
-                    ? $user->role->permissions->pluck('slug')->toArray()
+                    ? $user->role->permissions->pluck('name')->toArray()
                     : [],
             ],
         ], 200);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '@/lib/api';
 import type { NewsItem, Announcement } from '@/types';
+import AgencyLinks from './AgencyLinks';
 
 const HomePage: React.FC = () => {
     const [beritaList, setBeritaList] = useState<NewsItem[]>([]);
@@ -12,8 +13,8 @@ const HomePage: React.FC = () => {
         const fetchData = async () => {
             try {
                 const [beritaResponse, pengumumanResponse] = await Promise.all([
-                    api.get('/api/berita'),
-                    api.get('/api/pengumuman')
+                    api.get('/api/v1/berita'),
+                    api.get('/api/v1/pengumuman')
                 ]);
 
                 // Handle response data - ensure we're working with arrays
@@ -195,6 +196,11 @@ const HomePage: React.FC = () => {
             </div>
 
             <div className="container mt-4 mb-4"><hr /></div>
+
+            {/* Agency Links Carousel */}
+            <div className="container mb-4">
+                <AgencyLinks />
+            </div>
 
             <style>{`
                 .section-title-responsive {

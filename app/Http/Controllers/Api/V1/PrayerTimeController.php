@@ -193,7 +193,12 @@ class PrayerTimeController extends BaseController
      */
     private function saveToCacheFile(string $zone, array $data): void
     {
-        $filename = public_path("api_data/waktusolat_" . now()->format('m') . ".json");
+        $directory = public_path('api_data');
+        if (!file_exists($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        $filename = $directory . "/waktusolat_" . now()->format('m') . ".json";
         $currentData = [];
 
         if (file_exists($filename)) {
@@ -209,9 +214,10 @@ class PrayerTimeController extends BaseController
      */
     private function getFromCacheFile(string $zone): ?array
     {
-        $filename = public_path("api_data/waktusolat_" . now()->format('m') . ".json");
+        $directory = public_path('api_data');
+        $filename = $directory . "/waktusolat_" . now()->format('m') . ".json";
 
-        if (!file_exists($filename)) {
+        if (!file_exists($directory) || !file_exists($filename)) {
             return null;
         }
 

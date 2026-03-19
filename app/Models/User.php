@@ -25,7 +25,6 @@ class User extends Authenticatable
         'password',
         'role_id',
         'is_active',
-        'is_deleted',
         'is_blocked',
         'blocked_at',
         'blocked_reason',
@@ -50,7 +49,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'is_active' => 'boolean',
-        'is_deleted' => 'boolean',
         'is_blocked' => 'boolean',
         'blocked_at' => 'datetime',
     ];
@@ -64,20 +62,8 @@ class User extends Authenticatable
     }
 
     /**
-     * Get all permissions for the user through their role.
-     */
-    public function permissions(): BelongsToMany
-    {
-        return $this->role()->first()->permissions() ?? new BelongsToMany(
-            Permission::query()->getQuery(),
-            '',
-            '',
-            ''
-        );
-    }
-
-    /**
      * Check if user has a specific role.
+     * Case-insensitive comparison for role names.
      */
     public function hasRole(string|array $roles): bool
     {
@@ -87,9 +73,16 @@ class User extends Authenticatable
             return false;
         }
 
-        $roleSlugs = is_array($roles) ? $roles : [$roles];
+        $roleNames = is_array($roles) ? $roles : [$roles];
+        $userRoleName = strtolower($userRole->name);
 
-        return in_array($userRole->slug, $roleSlugs);
+        foreach ($roleNames as $role) {
+            if (strtolower($role) === $userRoleName) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

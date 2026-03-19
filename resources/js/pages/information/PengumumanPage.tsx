@@ -9,7 +9,7 @@ const PengumumanPage: React.FC = () => {
     useEffect(() => {
         const fetchPengumuman = async () => {
             try {
-                const response = await api.get<Announcement[]>('/api/pengumuman');
+                const response = await api.get<Announcement[]>('/api/v1/pengumuman');
                 // Ensure response.data is an array
                 const data = Array.isArray(response.data) ? response.data : [];
                 setPengumumanList(data);

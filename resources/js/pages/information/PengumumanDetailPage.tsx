@@ -14,7 +14,7 @@ const PengumumanDetailPage: React.FC = () => {
             if (!id) return;
 
             try {
-                const response = await api.get<Announcement>(`/api/pengumuman/${id}`);
+                const response = await api.get<Announcement>(`/api/v1/pengumuman/${id}`);
                 setPengumuman(response.data);
             } catch (err) {
                 console.error('Failed to fetch pengumuman:', err);

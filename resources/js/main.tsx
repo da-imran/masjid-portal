@@ -4,6 +4,11 @@ import './bootstrap';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import AppComponent from './AppComponent';
+import { getBrowserLogger } from './lib/browserLogger';
+
+// Initialize browser logger (stores logs in localStorage, no API calls)
+// Available console commands: viewLogs(), clearLogs(), downloadLogs(), exportLogs()
+getBrowserLogger();
 
 // Render the React application
 ReactDOM.createRoot(document.getElementById('root')!).render(

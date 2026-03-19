@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\V1\PrayerTimeController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,58 +15,37 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// API Routes (for React frontend)
-Route::prefix('api')->group(function () {
-    // Prayer times
-    Route::get('/solat', function () {
-        return response()->json([
-            'data' => app('App\Http\Controllers\APIController')->ApiSolat()->getData()->data ?? null
-        ]);
-    });
+// Prayer times - format to match Header.tsx expected format
+Route::get('/solat', function (Request $request) {
+    $controller = new PrayerTimeController();
+    $result = $controller->today($request);
 
-    // Visitor count
-    Route::get('/visitor-count', function () {
-        return response()->json([
-            'dailyCount' => rand(50, 200),
-            'monthlyCount' => rand(1000, 5000),
-            'overallCount' => rand(10000, 50000)
-        ]);
-    });
+    // PrayerTimeResource returns a JsonResource, need to convert to response
+    if (method_exists($result, 'toResponse')) {
+        $response = $result->toResponse($request);
+        if ($response->status() === 200) {
+            // JsonResource wraps in {"data": {...}}, so unwrap the first level
+            $content = json_decode($response->getContent(), true);
+            return response()->json($content); // Already wrapped by PrayerTimeResource
+        }
+        return $response;
+    }
 
-    // News (Berita)
-    Route::get('/berita', function () {
-        $beritaList = \App\Models\BeritaSemasa::active()->published()->orderBy('published_at', 'desc')->take(10)->get();
-        return response()->json($beritaList);
-    });
+    // JsonResponse returned on error
+    return $result;
+});
 
-    Route::get('/berita/{id}', function ($id) {
-        $berita = \App\Models\BeritaSemasa::active()->published()->findOrFail($id);
-        $berita->increment('view_count');
-        return response()->json($berita);
-    });
-
-    // Announcements (Pengumuman)
-    Route::get('/pengumuman', function () {
-        $pengumumanList = \App\Models\Pengumuman::orderBy('created_at', 'desc')->take(10)->get();
-        return response()->json($pengumumanList);
-    });
-
-    Route::get('/pengumuman/{id}', function ($id) {
-        $pengumuman = \App\Models\Pengumuman::findOrFail($id);
-        return response()->json($pengumuman);
-    });
-
-    // Fund Collection (Kutipan)
-    Route::get('/kutipan', function () {
-        $kutipanList = \App\Models\KutipanMasjid::orderBy('created_at', 'desc')->paginate(50);
-        return response()->json($kutipanList->items());
-    });
+// Visitor count
+Route::get('/visitor-count', function () {
+    return response()->json([
+        'dailyCount' => rand(50, 200),
+        'monthlyCount' => rand(1000, 5000),
+        'overallCount' => rand(10000, 50000)
+    ]);
 });
 
 // Admin Panel
 Route::view('/admin', 'admin');
-
-// SPA Fallback - Serve the React app for all other routes
 Route::get('/{any?}', function () {
     return view('layouts.app');
 })->where('any', '(?!api/|admin|storage|images).*');

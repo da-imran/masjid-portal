@@ -3,6 +3,62 @@ import { Link } from 'react-router-dom';
 import api from '@/lib/api';
 import type { PrayerTimes } from '@/types';
 
+interface PrayerTimesRowProps {
+    prayerTimes: PrayerTimes | null;
+    prayerError: string | null;
+}
+
+const PrayerTimesRow: React.FC<PrayerTimesRowProps> = ({ prayerTimes, prayerError }) => {
+    if (prayerError) {
+        return (
+            <tr>
+                <td colSpan={2} className="text-center text-danger fw-bold" style={{ fontSize: '11px' }}>
+                    {prayerError}
+                </td>
+            </tr>
+        );
+    }
+
+    if (!prayerTimes) {
+        return (
+            <tr>
+                <td colSpan={2} className="text-center" style={{ fontSize: '11px' }}>
+                    Memuat naik waktu solat...
+                </td>
+            </tr>
+        );
+    }
+
+    return (
+        <>
+            <tr>
+                <td className="text-start" style={{ fontSize: '11px' }}><strong>SUBUH</strong></td>
+                <td className="text-end" style={{ fontSize: '11px' }}>{prayerTimes.subuh}</td>
+            </tr>
+            <tr>
+                <td className="text-start" style={{ fontSize: '11px' }}><strong>SYURUK</strong></td>
+                <td className="text-end" style={{ fontSize: '11px' }}>{prayerTimes.syuruk}</td>
+            </tr>
+            <tr>
+                <td className="text-start" style={{ fontSize: '11px' }}><strong>ZOHOR</strong></td>
+                <td className="text-end" style={{ fontSize: '11px' }}>{prayerTimes.zohor}</td>
+            </tr>
+            <tr>
+                <td className="text-start" style={{ fontSize: '11px' }}><strong>ASAR</strong></td>
+                <td className="text-end" style={{ fontSize: '11px' }}>{prayerTimes.asar}</td>
+            </tr>
+            <tr>
+                <td className="text-start" style={{ fontSize: '11px' }}><strong>MAGHRIB</strong></td>
+                <td className="text-end" style={{ fontSize: '11px' }}>{prayerTimes.maghrib}</td>
+            </tr>
+            <tr>
+                <td className="text-start" style={{ fontSize: '11px' }}><strong>ISYAK</strong></td>
+                <td className="text-end" style={{ fontSize: '11px' }}>{prayerTimes.isyak}</td>
+            </tr>
+        </>
+    );
+};
+
 const Header: React.FC = () => {
     const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
     const [prayerError, setPrayerError] = useState<string | null>(null);
@@ -12,10 +68,10 @@ const Header: React.FC = () => {
     useEffect(() => {
         const fetchPrayerTimes = async () => {
             try {
-                const response = await api.get<{ data: PrayerTimes }>('/api/solat');
+                const response = await api.get<{ data: PrayerTimes }>('/solat');
                 setPrayerTimes(response.data.data);
             } catch (err) {
-                setPrayerError('Gagal memuat waktu solat');
+                setPrayerError('Gagal memuat naik waktu solat');
             }
         };
 
@@ -24,57 +80,6 @@ const Header: React.FC = () => {
 
     const toggleDropdown = (dropdownName: string) => {
         setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName);
-    };
-
-    const PrayerTimesRow: React.FC = () => {
-        if (prayerError) {
-            return (
-                <tr>
-                    <td colSpan={2} className="text-center text-danger fw-bold" style={{ fontSize: '11px' }}>
-                                                {prayerError}
-                    </td>
-                </tr>
-            );
-        }
-
-        if (!prayerTimes) {
-            return (
-                <tr>
-                    <td colSpan={2} className="text-center" style={{ fontSize: '11px' }}>
-                        Memuat waktu solat...
-                    </td>
-                </tr>
-            );
-        }
-
-        return (
-            <>
-                <tr>
-                    <td className="text-start" style={{ fontSize: '11px' }}><strong>SUBUH</strong></td>
-                    <td className="text-end" style={{ fontSize: '11px' }}>{prayerTimes.fajr}</td>
-                </tr>
-                <tr>
-                    <td className="text-start" style={{ fontSize: '11px' }}><strong>SYURUK</strong></td>
-                    <td className="text-end" style={{ fontSize: '11px' }}>{prayerTimes.syuruk}</td>
-                </tr>
-                <tr>
-                    <td className="text-start" style={{ fontSize: '11px' }}><strong>ZOHOR</strong></td>
-                    <td className="text-end" style={{ fontSize: '11px' }}>{prayerTimes.dhuhr}</td>
-                </tr>
-                <tr>
-                    <td className="text-start" style={{ fontSize: '11px' }}><strong>ASAR</strong></td>
-                    <td className="text-end" style={{ fontSize: '11px' }}>{prayerTimes.asr}</td>
-                </tr>
-                <tr>
-                    <td className="text-start" style={{ fontSize: '11px' }}><strong>MAGHRIB</strong></td>
-                    <td className="text-end" style={{ fontSize: '11px' }}>{prayerTimes.maghrib}</td>
-                </tr>
-                <tr>
-                    <td className="text-start" style={{ fontSize: '11px' }}><strong>ISYAK</strong></td>
-                    <td className="text-end" style={{ fontSize: '11px' }}>{prayerTimes.isha}</td>
-                </tr>
-            </>
-        );
     };
 
     return (
@@ -100,21 +105,21 @@ const Header: React.FC = () => {
                                                     </a> BAGI PULAU PINANG
                                                 </td>
                                                 <td align="center" valign="top"><strong>SUBUH</strong></td>
-                                                <td align="center" valign="top"> : <label style={{ fontWeight: 700 }}>{prayerTimes.fajr}</label> | </td>
+                                                <td align="center" valign="top"> : <label style={{ fontWeight: 700 }}>{prayerTimes.subuh}</label> | </td>
                                                 <td align="center" valign="top"><strong>SYURUK</strong></td>
                                                 <td align="center" valign="top"> : <label style={{ fontWeight: 700 }}>{prayerTimes.syuruk}</label> | </td>
                                                 <td align="center" valign="top"><strong>ZOHOR</strong></td>
-                                                <td align="center" valign="top"> : <label style={{ fontWeight: 700 }}>{prayerTimes.dhuhr}</label> | </td>
+                                                <td align="center" valign="top"> : <label style={{ fontWeight: 700 }}>{prayerTimes.zohor}</label> | </td>
                                                 <td align="center" valign="top"><strong>ASAR</strong></td>
-                                                <td align="center" valign="top"> : <label style={{ fontWeight: 700 }}>{prayerTimes.asr}</label> | </td>
+                                                <td align="center" valign="top"> : <label style={{ fontWeight: 700 }}>{prayerTimes.asar}</label> | </td>
                                                 <td align="center" valign="top"><strong>MAGHRIB</strong></td>
                                                 <td align="center" valign="top"> : <label style={{ fontWeight: 700 }}>{prayerTimes.maghrib}</label> | </td>
                                                 <td align="center" valign="top"><strong>ISYAK</strong></td>
-                                                <td align="center" valign="top"> : <label style={{ fontWeight: 700 }}>{prayerTimes.isha}</label> </td>
+                                                <td align="center" valign="top"> : <label style={{ fontWeight: 700 }}>{prayerTimes.isyak}</label> </td>
                                             </>
                                         ) : (
                                             <td colSpan={14} align="center" valign="top">
-                                                Memuat waktu solat...
+                                                Memuat naik waktu solat...
                                             </td>
                                         )}
                                     </tr>
@@ -142,7 +147,7 @@ const Header: React.FC = () => {
                             <div className="collapse mt-1" id="prayerTimesCollapse">
                                 <table className="table table-sm table-bordered mb-0" style={{ fontSize: '11px' }}>
                                     <tbody>
-                                        <PrayerTimesRow />
+                                        <PrayerTimesRow prayerTimes={prayerTimes} prayerError={prayerError} />
                                     </tbody>
                                 </table>
                             </div>
@@ -156,13 +161,13 @@ const Header: React.FC = () => {
                 <img
                     src="/images/masjid.jpeg"
                     alt="Masjid Al Mustaghfirin"
-                    style={{ marginRight: '10px', height: '3rem' }}
+                    style={{ marginRight: '10px', height: '3rem', width: 'auto', maxWidth: '100%', objectFit: 'contain' }}
                     className="d-none d-sm-inline"
                 />
                 <img
                     src="/images/masjid.jpeg"
                     alt="Masjid Al Mustaghfirin"
-                    style={{ marginRight: '8px', height: '2.5rem' }}
+                    style={{ marginRight: '8px', height: '2.5rem', width: 'auto', maxWidth: '100%', objectFit: 'contain' }}
                     className="d-inline d-sm-none"
                 />
                 <p className="d-none d-sm-inline">Masjid Al Mustaghfirin, Bayan Lepas</p>

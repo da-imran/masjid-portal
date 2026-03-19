@@ -5,7 +5,6 @@ import {
     ImageField,
     BooleanField,
     DateField,
-    NumberField,
     EditButton,
     ShowButton,
     DeleteButton,
@@ -16,7 +15,7 @@ import {
 
 function KemudahanList() {
     const { data: identity } = useGetIdentity();
-    const isAdmin = identity?.role === 'admin';
+    const isAdmin = identity?.role?.toLowerCase() === 'admin';
     const notify = useNotify();
     const refresh = useRefresh();
 
@@ -26,13 +25,11 @@ function KemudahanList() {
     };
 
     return (
-        <List sort={{ field: 'order_column', order: 'ASC' }}>
-            <Datagrid rowClick="show" size="medium">
+        <List sort={{ field: 'created_at', order: 'DESC' }}>
+            <Datagrid size="medium" rowClick={false}>
                 <TextField source="id" />
                 <TextField source="title_ms" label="Title (MS)" />
-                <TextField source="icon_name" label="Icon" />
-                <ImageField source="image_name" label="Image" sx={{ '& img': { maxWidth: 50, maxHeight: 50 } }} />
-                <NumberField source="order_column" label="Order" />
+                <ImageField source="image_name" label="Image" src="image_name" sx={{ '& img': { maxWidth: 50, maxHeight: 50, objectFit: 'cover' } }} />
                 <BooleanField source="is_active" label="Active" />
                 <DateField source="created_at" label="Created" showTime />
                 {isAdmin && <TextField source="creator.name" label="Created By" />}

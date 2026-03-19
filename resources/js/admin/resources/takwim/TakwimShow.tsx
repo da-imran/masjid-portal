@@ -29,7 +29,7 @@ const TakwimShowActions = () => {
 
 export const TakwimShow = () => {
     const { data: identity } = useGetIdentity();
-    const isAdmin = identity?.role === 'admin';
+    const isAdmin = identity?.role?.toLowerCase() === 'admin';
 
     return (
         <Show actions={<TakwimShowActions />}>

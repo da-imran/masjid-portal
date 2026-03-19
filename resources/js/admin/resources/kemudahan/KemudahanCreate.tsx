@@ -2,8 +2,9 @@ import {
     Create,
     SimpleForm,
     TextInput,
-    NumberInput,
     BooleanInput,
+    ImageInput,
+    ImageField,
     Toolbar,
     SaveButton,
     useRedirect,
@@ -65,12 +66,17 @@ export const KemudahanCreate = () => {
                         fullWidth
                     />
 
-                    <TextInput source="icon_name" label="Icon Name" fullWidth />
-                    <TextInput source="image_name" label="Image Name" fullWidth />
+                    <ImageInput
+                        source="image"
+                        label="Image"
+                        accept={{ 'image/*': ['.png', '.jpg', '.jpeg', '.gif', '.webp'] }}
+                        maxSize={5000000}
+                    >
+                        <ImageField source="src" title="title" />
+                    </ImageInput>
 
                     <Typography variant="h6" mt={2}>Settings</Typography>
 
-                    <NumberInput source="order_column" label="Order Column" defaultValue={0} fullWidth />
                     <BooleanInput source="is_active" label="Active" defaultValue={true} />
                 </Box>
             </SimpleForm>

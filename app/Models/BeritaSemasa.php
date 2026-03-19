@@ -107,7 +107,9 @@ class BeritaSemasa extends Model
      */
     public function getTitleAttribute(): string
     {
-        return app()->getLocale() === 'ms' ? $this->title_ms : $this->title_en;
+        return app()->getLocale() === 'ms'
+            ? ($this->title_ms ?? $this->title_en ?? '')
+            : ($this->title_en ?? $this->title_ms ?? '');
     }
 
     /**
@@ -115,7 +117,9 @@ class BeritaSemasa extends Model
      */
     public function getDescriptionAttribute(): string
     {
-        return app()->getLocale() === 'ms' ? $this->description_ms : $this->description_en;
+        return app()->getLocale() === 'ms'
+            ? ($this->description_ms ?? $this->description_en ?? '')
+            : ($this->description_en ?? $this->description_ms ?? '');
     }
 
     /**

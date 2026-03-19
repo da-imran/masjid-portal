@@ -15,7 +15,7 @@ import {
 
 function BeritaList() {
     const { data: identity } = useGetIdentity();
-    const isAdmin = identity?.role === 'admin';
+    const isAdmin = identity?.role?.toLowerCase() === 'admin';
     const notify = useNotify();
     const refresh = useRefresh();
 
@@ -26,7 +26,7 @@ function BeritaList() {
 
     return (
         <List sort={{ field: 'created_at', order: 'DESC' }}>
-            <Datagrid rowClick="show" size="medium">
+            <Datagrid size="medium" rowClick={false}>
                 <TextField source="id" />
                 <TextField source="title_ms" label="Title (MS)" />
                 <ImageField source="image_name" label="Image" sx={{ '& img': { maxWidth: 50, maxHeight: 50 } }} />

@@ -4,7 +4,6 @@ import {
     TextField,
     ImageField,
     BooleanField,
-    NumberField,
     DateField,
     ReferenceField,
     useGetIdentity,
@@ -30,7 +29,7 @@ const KemudahanShowActions = () => {
 
 export const KemudahanShow = () => {
     const { data: identity } = useGetIdentity();
-    const isAdmin = identity?.role === 'admin';
+    const isAdmin = identity?.role?.toLowerCase() === 'admin';
 
     return (
         <Show actions={<KemudahanShowActions />}>
@@ -42,7 +41,6 @@ export const KemudahanShow = () => {
                 <TextField source="description_en" label="Description (English)" />
                 <TextField source="icon_name" label="Icon" />
                 <ImageField source="image_name" label="Image" />
-                <NumberField source="order_column" label="Order" />
                 <BooleanField source="is_active" label="Active" />
                 {isAdmin && (
                     <ReferenceField source="created_by" reference="users" label="Created By">

@@ -4,11 +4,13 @@ import {
     TextInput,
     DateInput,
     BooleanInput,
+    FunctionField,
     useGetIdentity,
     Toolbar,
     SaveButton,
     useRedirect,
     useNotify,
+    useRefresh,
 } from 'react-admin';
 import { Box, Typography, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -32,11 +34,13 @@ const CustomEditToolbar = () => {
 
 export const TakwimEdit = () => {
     const { data: identity } = useGetIdentity();
-    const isAdmin = identity?.role === 'admin';
+    const isAdmin = identity?.role?.toLowerCase() === 'admin';
     const notify = useNotify();
     const redirect = useRedirect();
+    const refresh = useRefresh();
 
     const onSuccess = () => {
+        refresh();
         notify('Event updated successfully', { type: 'success' });
         redirect('list', 'takwim');
     };
@@ -83,13 +87,24 @@ export const TakwimEdit = () => {
                     <BooleanInput source="is_active" label="Active" />
 
                     {isAdmin && (
-                        <Box mt={2} p={2} bgcolor="grey.100" borderRadius={1}>
-                            <Typography variant="subtitle2" color="textSecondary">
+                        <Box mt={2} p={2} sx={{ bgcolor: 'action.hover', borderRadius: 1 }}>
+                            <Typography variant="subtitle2" sx={{ color: 'text.primary', fontWeight: 600 }}>
                                 Audit Information
                             </Typography>
-                            <Typography variant="body2">
-                                Created By: <strong>{identity?.fullName || 'N/A'}</strong>
-                            </Typography>
+                            <FunctionField
+                                render={(record: any) => (
+                                    <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                                        Created By: <Box component="span" sx={{ fontWeight: 'bold' }}>{record?.creator?.name || 'N/A'}</Box>
+                                    </Typography>
+                                )}
+                            />
+                            <FunctionField
+                                render={(record: any) => (
+                                    <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                                        Updated By: <Box component="span" sx={{ fontWeight: 'bold' }}>{record?.updater?.name || 'N/A'}</Box>
+                                    </Typography>
+                                )}
+                            />
                         </Box>
                     )}
                 </Box>

@@ -29,7 +29,7 @@ const UserShowActions = () => {
 
 export const UserShow = () => {
     const { data: identity } = useGetIdentity();
-    const isAdmin = identity?.role === 'admin';
+    const isAdmin = identity?.role?.toLowerCase() === 'admin';
 
     return (
         <Show actions={<UserShowActions />}>

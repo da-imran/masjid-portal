@@ -17,7 +17,7 @@ const KemudahanPage: React.FC = () => {
     useEffect(() => {
         const fetchKemudahan = async () => {
             try {
-                const response = await api.get<KemudahanItem[]>('/api/kemudahan');
+                const response = await api.get<KemudahanItem[]>('/api/v1/kemudahan');
                 // Ensure response.data is an array
                 const data = Array.isArray(response.data) ? response.data : [];
                 setKemudahanList(data);

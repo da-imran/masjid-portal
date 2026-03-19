@@ -15,7 +15,7 @@ import {
 
 function TakwimList() {
     const { data: identity } = useGetIdentity();
-    const isAdmin = identity?.role === 'admin';
+    const isAdmin = identity?.role?.toLowerCase() === 'admin';
     const notify = useNotify();
     const refresh = useRefresh();
 
@@ -26,7 +26,7 @@ function TakwimList() {
 
     return (
         <List sort={{ field: 'event_date', order: 'ASC' }}>
-            <Datagrid rowClick="show" size="medium">
+            <Datagrid size="medium" rowClick={false}>
                 <TextField source="id" />
                 <TextField source="title_ms" label="Title (MS)" />
                 <DateField source="event_date" label="Event Date" />

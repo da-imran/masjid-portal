@@ -14,7 +14,7 @@ const BeritaDetailPage: React.FC = () => {
             if (!id) return;
 
             try {
-                const response = await api.get<NewsItem>(`/api/berita/${id}`);
+                const response = await api.get<NewsItem>(`/api/v1/berita/${id}`);
                 setBerita(response.data);
             } catch (err) {
                 console.error('Failed to fetch berita:', err);

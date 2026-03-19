@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Role extends Model
 {
@@ -12,13 +14,12 @@ class Role extends Model
 
     protected $fillable = [
         'name',
-        'slug',
         'description',
-        'is_default',
+        'is_active',
     ];
 
     protected $casts = [
-        'is_default' => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     /**
@@ -32,29 +33,55 @@ class Role extends Model
     /**
      * Get the permissions for this role.
      */
-    public function permissions(): BelongsToMany
+    public function permissions(): HasMany
     {
-        return $this->belongsToMany(Permission::class, 'permission_role');
+        return $this->hasMany(Permission::class);
     }
 
     /**
-     * Check if role has a specific permission.
+     * Scope to filter active roles.
      */
-    public function hasPermission(string $permissionSlug): bool
+    public function scopeActive($query)
     {
-        return $this->permissions()->where('slug', $permissionSlug)->exists();
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope to filter by name.
+     */
+    public function scopeByName($query, string $name)
+    {
+        return $query->where('name', $name);
+    }
+
+    /**
+     * Check if role has a specific permission by name.
+     */
+    public function hasPermission(string $permissionName): bool
+    {
+        return $this->permissions()->where('name', $permissionName)->where('is_active', true)->exists();
     }
 
     /**
      * Grant a permission to this role.
      */
-    public function givePermissionTo(Permission|string $permission): self
+    public function givePermissionTo(Permission|string $permission, string $description = null): self
     {
         if (is_string($permission)) {
-            $permission = Permission::where('slug', $permission)->firstOrFail();
+            // Check if permission already exists for this role
+            $existing = $this->permissions()->where('name', $permission)->first();
+            if ($existing) {
+                return $this;
+            }
+
+            $permission = new Permission([
+                'name' => $permission,
+                'description' => $description ?? $permission,
+                'is_active' => true,
+            ]);
         }
 
-        $this->permissions()->syncWithoutDetaching([$permission->id]);
+        $this->permissions()->save($permission);
 
         return $this;
     }
@@ -65,27 +92,13 @@ class Role extends Model
     public function revokePermissionTo(Permission|string $permission): self
     {
         if (is_string($permission)) {
-            $permission = Permission::where('slug', $permission)->firstOrFail();
+            $permission = $this->permissions()->where('name', $permission)->first();
         }
 
-        $this->permissions()->detach($permission->id);
+        if ($permission) {
+            $permission->delete();
+        }
 
         return $this;
-    }
-
-    /**
-     * Scope to filter by default role.
-     */
-    public function scopeDefault($query)
-    {
-        return $query->where('is_default', true);
-    }
-
-    /**
-     * Scope to filter by name.
-     */
-    public function scopeByName($query, string $name)
-    {
-        return $query->where('slug', $name);
     }
 }

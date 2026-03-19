@@ -17,7 +17,6 @@ class Kemudahan extends Model
         'title_en',
         'description_ms',
         'description_en',
-        'icon_name',
         'image_name',
         'order_column',
         'is_active',

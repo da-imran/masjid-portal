@@ -19,7 +19,7 @@ const TakwimPage: React.FC = () => {
     useEffect(() => {
         const fetchTakwim = async () => {
             try {
-                const response = await api.get<TakwimItem[]>('/api/takwim');
+                const response = await api.get<TakwimItem[]>('/api/v1/takwim');
                 // Ensure response.data is an array
                 const data = Array.isArray(response.data) ? response.data : [];
                 setTakwimList(data);

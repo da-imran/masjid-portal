@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('role_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->string('slug')->unique();
-            $table->string('module'); // berita, pengumuman, users, downloads, etc.
-            $table->string('action'); // view, create, edit, delete
             $table->text('description')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
+
+            // Unique permission name per role
+            $table->unique(['role_id', 'name']);
         });
     }
 

@@ -9,7 +9,7 @@ const BeritaSemasaPage: React.FC = () => {
     useEffect(() => {
         const fetchBerita = async () => {
             try {
-                const response = await api.get<NewsItem[]>('/api/berita');
+                const response = await api.get<NewsItem[]>('/api/v1/berita');
                 // Ensure response.data is an array
                 const data = Array.isArray(response.data) ? response.data : [];
                 setBeritaList(data);

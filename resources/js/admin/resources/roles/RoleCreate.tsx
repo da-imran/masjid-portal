@@ -32,7 +32,7 @@ const CustomCreateToolbar = () => {
 
 export const RoleCreate = () => {
     const { data: identity } = useGetIdentity();
-    const isAdmin = identity?.role === 'admin';
+    const isAdmin = identity?.role?.toLowerCase() === 'admin';
     const notify = useNotify();
     const redirect = useRedirect();
 
@@ -48,27 +48,26 @@ export const RoleCreate = () => {
 
     return (
         <Create
-            title="Cipta Jenis Pengguna"
+            title="Cipta Peranan"
             mutationOptions={{ onSuccess }}
         >
             <SimpleForm toolbar={<CustomCreateToolbar />}>
                 <Box display="flex" flexDirection="column" gap={2} width="100%">
-                    <Typography variant="h6">Role Information</Typography>
+                    <Typography variant="h6">Maklumat Peranan</Typography>
 
-                    <TextInput source="name" label="Name" fullWidth validate={required()} />
-                    <TextInput source="slug" label="Slug" fullWidth validate={required()} />
+                    <TextInput source="name" label="Nama" fullWidth validate={required()} />
 
                     <TextInput
                         source="description"
-                        label="Description"
+                        label="Penerangan"
                         multiline
                         rows={3}
                         fullWidth
                     />
 
-                    <Typography variant="h6" mt={2}>Settings</Typography>
+                    <Typography variant="h6" mt={2}>Tetapan</Typography>
 
-                    <BooleanInput source="is_default" label="Default Role" defaultValue={false} />
+                    <BooleanInput source="is_active" label="Aktif" defaultValue={true} />
                 </Box>
             </SimpleForm>
         </Create>

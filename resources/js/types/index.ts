@@ -1,12 +1,12 @@
 // Common types for the application
 
 export interface PrayerTimes {
-    fajr: string;
+    subuh: string;
     syuruk: string;
-    dhuhr: string;
-    asr: string;
+    zohor: string;
+    asar: string;
     maghrib: string;
-    isha: string;
+    isyak: string;
 }
 
 export interface NewsItem {
@@ -85,3 +85,49 @@ export interface DownloadItem {
     created_at: string;
     updated_at: string;
 }
+
+// RBAC Types
+export interface Permission {
+    id: number;
+    role_id: number;
+    name: string;
+    description: string;
+    is_active: boolean;
+    created_at?: string;
+    updated_at?: string;
+}
+
+export interface Role {
+    id: number;
+    name: string;
+    description: string;
+    is_active: boolean;
+    permissions?: Permission[];
+    created_at?: string;
+    updated_at?: string;
+}
+
+// Permission categories for RBAC UI
+export type PermissionAction = 'view' | 'create' | 'edit' | 'delete';
+
+export interface PermissionModule {
+    key: string;
+    label: string;
+    labelEn: string;
+}
+
+export const PERMISSION_MODULES: PermissionModule[] = [
+    { key: 'users', label: 'Pengguna', labelEn: 'Users' },
+    { key: 'roles', label: 'Peranan', labelEn: 'Roles' },
+    { key: 'berita', label: 'Berita', labelEn: 'News' },
+    { key: 'kemudahan', label: 'Kemudahan', labelEn: 'Facilities' },
+    { key: 'takwim', label: 'Takwim', labelEn: 'Calendar' },
+    { key: 'pengumuman', label: 'Pengumuman', labelEn: 'Announcements' },
+];
+
+export const PERMISSION_ACTIONS: { key: PermissionAction; label: string; labelEn: string }[] = [
+    { key: 'view', label: 'Lihat', labelEn: 'View' },
+    { key: 'create', label: 'Cipta', labelEn: 'Create' },
+    { key: 'edit', label: 'Edit', labelEn: 'Edit' },
+    { key: 'delete', label: 'Padam', labelEn: 'Delete' },
+];

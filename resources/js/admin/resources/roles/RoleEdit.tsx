@@ -8,6 +8,7 @@ import {
     useRedirect,
     useGetIdentity,
     useNotify,
+    useRefresh,
 } from 'react-admin';
 import { Box, Typography, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -31,13 +32,19 @@ const CustomEditToolbar = () => {
 
 export const RoleEdit = () => {
     const { data: identity } = useGetIdentity();
-    const isAdmin = identity?.role === 'admin';
+    const isAdmin = identity?.role?.toLowerCase() === 'admin';
     const notify = useNotify();
     const redirect = useRedirect();
+    const refresh = useRefresh();
 
     const onSuccess = () => {
         notify('Data telah dikemaskini', { type: 'success' });
+        refresh();
         redirect('list', 'roles');
+    };
+
+    const onError = (error: any) => {
+        notify(error.message || 'Gagal mengemaskini data', { type: 'error' });
     };
 
     // Only allow admin to access this page
@@ -47,27 +54,27 @@ export const RoleEdit = () => {
 
     return (
         <Edit
-            title="Kemaskini Jenis Pengguna #%{id}"
-            mutationOptions={{ onSuccess }}
+            title="Kemaskini Peranan #%{id}"
+            mutationMode="pessimistic"
+            mutationOptions={{ onSuccess, onError }}
         >
             <SimpleForm toolbar={<CustomEditToolbar />}>
                 <Box display="flex" flexDirection="column" gap={2} width="100%">
-                    <Typography variant="h6">Role Information</Typography>
+                    <Typography variant="h6">Maklumat Peranan</Typography>
 
-                    <TextInput source="name" label="Name" fullWidth disabled />
-                    <TextInput source="slug" label="Slug" fullWidth disabled />
+                    <TextInput source="name" label="Nama" fullWidth />
 
                     <TextInput
                         source="description"
-                        label="Description"
+                        label="Penerangan"
                         multiline
                         rows={3}
                         fullWidth
                     />
 
-                    <Typography variant="h6" mt={2}>Settings</Typography>
+                    <Typography variant="h6" mt={2}>Tetapan</Typography>
 
-                    <BooleanInput source="is_default" label="Default Role" />
+                    <BooleanInput source="is_active" label="Aktif" />
                 </Box>
             </SimpleForm>
         </Edit>

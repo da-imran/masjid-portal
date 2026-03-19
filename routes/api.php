@@ -1,20 +1,19 @@
 <?php
 
-use App\Http\Controllers\Api\V1\Admin\AuthController;
-use App\Http\Controllers\Api\V1\Admin\BeritaSemasaController as AdminBeritaSemasaController;
-use App\Http\Controllers\Api\V1\Admin\KemudahanController;
+use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\Admin\BrowserLogController;
+use App\Http\Controllers\Api\V1\Admin\PermissionController;
 use App\Http\Controllers\Api\V1\Admin\RoleController;
-use App\Http\Controllers\Api\V1\Admin\TakwimController;
 use App\Http\Controllers\Api\V1\Admin\UserController;
 use App\Http\Controllers\Api\V1\BeritaSemasaController;
 use App\Http\Controllers\Api\V1\CorporateInfoController;
 use App\Http\Controllers\Api\V1\DownloadController;
-use App\Http\Controllers\Api\V1\KemudahanController as PublicKemudahanController;
+use App\Http\Controllers\Api\V1\KemudahanController;
 use App\Http\Controllers\Api\V1\KutipanMasjidController;
 use App\Http\Controllers\Api\V1\PengumumanController;
 use App\Http\Controllers\Api\V1\PrayerTimeController;
 use App\Http\Controllers\Api\V1\SystemController;
-use App\Http\Controllers\Api\V1\TakwimController as PublicTakwimController;
+use App\Http\Controllers\Api\V1\TakwimController;
 use App\Http\Controllers\Api\V1\VisitorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,10 +31,19 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
+| Public Login/Logout Route
+|--------------------------------------------------------------------------
+*/
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+/*
+|--------------------------------------------------------------------------
 | Public System Routes (No authentication required)
 |--------------------------------------------------------------------------
 */
 Route::get('/maintenance', [SystemController::class, 'maintenanceStatus']);
+Route::get('/v1/health', [SystemController::class, 'health']);
 
 // Sanctum authenticated user route
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -52,69 +60,51 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 */
 
 Route::prefix('v1')->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/me', [AuthController::class, 'me']);
+        Route::post('/user-refresh', [AuthController::class, 'refresh']);
+    });
 
     /*
     |--------------------------------------------------------------------------
-    | Admin Authentication Routes
+    | Admin Authentication Routes (Authenticated)
     |--------------------------------------------------------------------------
     */
     Route::prefix('admin')->group(function () {
-        Route::post('/login', [AuthController::class, 'login']);
-
         Route::middleware('auth:sanctum')->group(function () {
-            Route::post('/logout', [AuthController::class, 'logout']);
-            Route::get('/me', [AuthController::class, 'me']);
-            Route::post('/refresh', [AuthController::class, 'refresh']);
-
             /*
             |--------------------------------------------------------------------------
-            | Admin User Management Routes (Admin only)
+            | Browser Logging Routes
             |--------------------------------------------------------------------------
             */
-            Route::middleware('role:admin')->group(function () {
-                Route::apiResource('users', UserController::class);
-                Route::post('users/{id}/block', [UserController::class, 'block'])->where('id', '[0-9]+');
-                Route::post('users/{id}/unblock', [UserController::class, 'unblock'])->where('id', '[0-9]+');
-                Route::apiResource('roles', RoleController::class);
+            Route::prefix('logs')->group(function () {
+                Route::post('/browser', [BrowserLogController::class, 'store']);
+                Route::delete('/browser', [BrowserLogController::class, 'clear'])->middleware('role:admin');
             });
 
             /*
             |--------------------------------------------------------------------------
-            | Admin Berita Semasa Routes
+            | Admin User Management Routes (Permission-based access)
             |--------------------------------------------------------------------------
             */
-            Route::prefix('berita')->group(function () {
-                Route::get('/', [AdminBeritaSemasaController::class, 'index'])->middleware('permission:berita.view');
-                Route::get('/{id}', [AdminBeritaSemasaController::class, 'show'])->where('id', '[0-9]+')->middleware('permission:berita.view');
-                Route::post('/', [AdminBeritaSemasaController::class, 'store'])->middleware('permission:berita.create');
-                Route::match(['put', 'patch'], '/{id}', [AdminBeritaSemasaController::class, 'update'])->where('id', '[0-9]+')->middleware('permission:berita.edit');
-                Route::delete('/{id}', [AdminBeritaSemasaController::class, 'destroy'])->where('id', '[0-9]+')->middleware('permission:berita.delete');
-            });
+            // Permission-based middleware applied in controllers
+            Route::apiResource('users', UserController::class);
+            Route::post('users/{id}/block', [UserController::class, 'block'])->where('id', '[0-9]+');
+            Route::post('users/{id}/unblock', [UserController::class, 'unblock'])->where('id', '[0-9]+');
+            Route::post('users/{id}/disable', [UserController::class, 'disable'])->where('id', '[0-9]+');
+            Route::post('users/{id}/enable', [UserController::class, 'enable'])->where('id', '[0-9]+');
+            Route::apiResource('roles', RoleController::class);
+            Route::apiResource('permissions', PermissionController::class);
 
-            /*
-            |--------------------------------------------------------------------------
-            | Admin Kemudahan Routes
-            |--------------------------------------------------------------------------
-            */
-            Route::prefix('kemudahan')->group(function () {
-                Route::get('/', [KemudahanController::class, 'index'])->middleware('permission:kemudahan.view');
-                Route::get('/{id}', [KemudahanController::class, 'show'])->where('id', '[0-9]+')->middleware('permission:kemudahan.view');
-                Route::post('/', [KemudahanController::class, 'store'])->middleware('permission:kemudahan.create');
-                Route::match(['put', 'patch'], '/{id}', [KemudahanController::class, 'update'])->where('id', '[0-9]+')->middleware('permission:kemudahan.edit');
-                Route::delete('/{id}', [KemudahanController::class, 'destroy'])->where('id', '[0-9]+')->middleware('permission:kemudahan.delete');
-            });
-
-            /*
-            |--------------------------------------------------------------------------
-            | Admin Takwim Routes
-            |--------------------------------------------------------------------------
-            */
-            Route::prefix('takwim')->group(function () {
-                Route::get('/', [TakwimController::class, 'index'])->middleware('permission:takwim.view');
-                Route::get('/{id}', [TakwimController::class, 'show'])->where('id', '[0-9]+')->middleware('permission:takwim.view');
-                Route::post('/', [TakwimController::class, 'store'])->middleware('permission:takwim.create');
-                Route::match(['put', 'patch'], '/{id}', [TakwimController::class, 'update'])->where('id', '[0-9]+')->middleware('permission:takwim.edit');
-                Route::delete('/{id}', [TakwimController::class, 'destroy'])->where('id', '[0-9]+')->middleware('permission:takwim.delete');
+            // Role Permission Management
+            Route::prefix('roles/{roleId}')->group(function () {
+                Route::post('permissions', [RoleController::class, 'addPermission'])->where('roleId', '[0-9]+');
+                Route::match(['put', 'patch'], 'permissions/{permissionId}', [RoleController::class, 'updatePermission'])
+                    ->where('roleId', '[0-9]+')
+                    ->where('permissionId', '[0-9]+');
+                Route::delete('permissions/{permissionId}', [RoleController::class, 'removePermission'])
+                    ->where('roleId', '[0-9]+')
+                    ->where('permissionId', '[0-9]+');
             });
         });
     });
@@ -129,6 +119,12 @@ Route::prefix('v1')->group(function () {
         Route::get('/featured', [BeritaSemasaController::class, 'featured']);
         Route::get('/{id}', [BeritaSemasaController::class, 'show'])->where('id', '[0-9]+');
         Route::post('/{id}/view', [BeritaSemasaController::class, 'incrementView'])->where('id', '[0-9]+');
+        
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::post('/', [BeritaSemasaController::class, 'store'])->middleware('permission:berita.create');
+            Route::match(['put', 'patch'], '/{id}', [BeritaSemasaController::class, 'update'])->where('id', '[0-9]+')->middleware('permission:berita.edit');
+            Route::delete('/{id}', [BeritaSemasaController::class, 'destroy'])->where('id', '[0-9]+')->middleware('permission:berita.delete');
+        });
     });
 
     /*
@@ -140,6 +136,12 @@ Route::prefix('v1')->group(function () {
         Route::get('/', [PengumumanController::class, 'index']);
         Route::get('/high-priority', [PengumumanController::class, 'highPriority']);
         Route::get('/{id}', [PengumumanController::class, 'show'])->where('id', '[0-9]+');
+
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::post('/', [PengumumanController::class, 'store'])->middleware('permission:pengumuman.create');
+            Route::match(['put', 'patch'], '/{id}', [PengumumanController::class, 'update'])->where('id', '[0-9]+')->middleware('permission:pengumuman.edit');
+            Route::delete('/{id}', [PengumumanController::class, 'destroy'])->where('id', '[0-9]+')->middleware('permission:pengumuman.delete');
+        });
     });
 
     /*
@@ -148,8 +150,14 @@ Route::prefix('v1')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::prefix('kemudahan')->group(function () {
-        Route::get('/', [PublicKemudahanController::class, 'index']);
-        Route::get('/{id}', [PublicKemudahanController::class, 'show'])->where('id', '[0-9]+');
+        Route::get('/', [KemudahanController::class, 'index']);
+        Route::get('/{id}', [KemudahanController::class, 'show'])->where('id', '[0-9]+');
+       
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::post('/', [KemudahanController::class, 'store'])->middleware('permission:kemudahan.create');
+            Route::match(['put', 'patch'], '/{id}', [KemudahanController::class, 'update'])->where('id', '[0-9]+')->middleware('permission:kemudahan.edit');
+            Route::delete('/{id}', [KemudahanController::class, 'destroy'])->where('id', '[0-9]+')->middleware('permission:kemudahan.delete');
+        });
     });
 
     /*
@@ -158,9 +166,15 @@ Route::prefix('v1')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::prefix('takwim')->group(function () {
-        Route::get('/', [PublicTakwimController::class, 'index']);
-        Route::get('/upcoming', [PublicTakwimController::class, 'upcoming']);
-        Route::get('/{id}', [PublicTakwimController::class, 'show'])->where('id', '[0-9]+');
+        Route::get('/', [TakwimController::class, 'index']);
+        Route::get('/upcoming', [TakwimController::class, 'upcoming']);
+        Route::get('/{id}', [TakwimController::class, 'show'])->where('id', '[0-9]+');
+        
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::post('/', [TakwimController::class, 'store'])->middleware('permission:takwim.create');
+            Route::match(['put', 'patch'], '/{id}', [TakwimController::class, 'update'])->where('id', '[0-9]+')->middleware('permission:takwim.edit');
+            Route::delete('/{id}', [TakwimController::class, 'destroy'])->where('id', '[0-9]+')->middleware('permission:takwim.delete');
+        });
     });
 
     /*
@@ -180,6 +194,7 @@ Route::prefix('v1')->group(function () {
     */
     Route::prefix('kutipan')->group(function () {
         Route::get('/', [KutipanMasjidController::class, 'index']);
+        Route::get('/summaries', [KutipanMasjidController::class, 'summaries']);
         Route::get('/summary', [KutipanMasjidController::class, 'summary']);
         Route::get('/current-month', [KutipanMasjidController::class, 'currentMonth']);
         Route::get('/{id}', [KutipanMasjidController::class, 'show'])->where('id', '[0-9]+');

@@ -41,6 +41,14 @@ export default defineConfig({
                 target: 'http://localhost:8081',
                 changeOrigin: true,
             },
+            '/solat': {
+                target: 'http://localhost:8081',
+                changeOrigin: true,
+            },
+            '/visitor-count': {
+                target: 'http://localhost:8081',
+                changeOrigin: true,
+            },
         },
     },
 });
